@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,18 +21,24 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(name = "cars")
 public class Car implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
 	@NotNull(message = "The brand is required")
+	@Column
 	private String brand;
 
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column
+	@NotNull(message = "The registration date is required")
 	private Date registration;
 
 	@NotNull(message = "The country is required")
+	@Column
 	private String country;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -103,6 +110,5 @@ public class Car implements Serializable {
 		this.updated_at = updated_at;
 	}
 
-	private static final long serialVersionUID = 1L;
 
 }
