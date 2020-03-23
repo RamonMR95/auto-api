@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 
 public class FlywayIntegrator implements Integrator {
 
-    private static final String SCHEMA = "public";
     private static final String SCRIPT_LOCATIONS = "db/migration";
     private static Logger log = LoggerFactory.getLogger(FlywayIntegrator.class);
 
@@ -32,7 +31,6 @@ public class FlywayIntegrator implements Integrator {
             connection = dataSource.getConnection();
 
             Flyway flyway = new Flyway();
-            flyway.setSchemas(SCHEMA);
             flyway.setLocations(SCRIPT_LOCATIONS);
             flyway.setDataSource(dataSource);
             flyway.setBaselineOnMigrate(true);
@@ -51,7 +49,7 @@ public class FlywayIntegrator implements Integrator {
     }
 
     public void disintegrate(SessionFactoryImplementor sessionFactoryImplementor, SessionFactoryServiceRegistry sessionFactoryServiceRegistry) {
-
+    	// Not used
     }
 
 }
