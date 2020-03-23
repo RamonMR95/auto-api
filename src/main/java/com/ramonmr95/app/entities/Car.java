@@ -21,7 +21,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(name = "cars")
 public class Car implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -29,16 +29,16 @@ public class Car implements Serializable {
 	private UUID id;
 
 	@NotNull(message = "The brand is required")
-	@Column
+	@Column(nullable = false)
 	private String brand;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column
+	@Column(nullable = false)
 	@NotNull(message = "The registration date is required")
 	private Date registration;
 
 	@NotNull(message = "The country is required")
-	@Column
+	@Column(nullable = false)
 	private String country;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -48,7 +48,6 @@ public class Car implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@UpdateTimestamp
 	private Date updated_at;
-
 
 	public Car() {
 
@@ -109,6 +108,5 @@ public class Car implements Serializable {
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
 	}
-
 
 }
