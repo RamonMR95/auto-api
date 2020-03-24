@@ -53,10 +53,10 @@ public class Car implements Serializable {
 
 	}
 
-	public Car(String brand, String country) {
+	public Car(String brand, String country, Date registration) {
 		this.brand = brand;
 		this.country = country;
-		this.registration = new Timestamp(new Date().getTime());
+		this.registration = registration;
 		this.created_at = new Timestamp(new Date().getTime());
 		this.updated_at = new Timestamp(new Date().getTime());
 	}
