@@ -8,7 +8,6 @@ import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -23,19 +22,18 @@ import com.ramonmr95.app.services.CarService;
 import com.ramonmr95.app.utils.CarNotFoundException;
 
 @Path("/cars")
+@Produces(MediaType.APPLICATION_JSON)
 public class CarResource {
 
 	@EJB
 	private CarService carService;
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	public List<Car> getAllCars() {
 		return this.carService.getCars();
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
 	public Response getCarById(@PathParam("id") UUID id) {
 		try {
@@ -49,35 +47,20 @@ public class CarResource {
 			return Response.status(Status.NOT_FOUND)
 					.build();
 		} 
-		catch (InternalServerErrorException e) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR)
-					.build();
-		}
-
 	}
-
 	
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createCar(@Valid Car car) {
-		try {
-			this.carService.createCar(car);
-			
-			return Response.status(Status.CREATED)
-					.entity(car)
-					.build();
-		} 
-		catch (InternalServerErrorException e) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR)
-					.build();
-		}
-
+		this.carService.createCar(car);
+		
+		return Response.status(Status.CREATED)
+				.entity(car)
+				.build();
 	}
 
 	@PUT
 	@Path("/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateCar(@PathParam("id") UUID id, @Valid Car car) {
 		try {
@@ -96,15 +79,9 @@ public class CarResource {
 			return Response.status(Status.NOT_FOUND)
 					.build();
 		} 
-		catch (InternalServerErrorException e) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR)
-					.build();
-		}
-		
 	}
 
 	@DELETE
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
 	public Response deleteCar(@PathParam("id") UUID id) {
 		try {
@@ -117,11 +94,6 @@ public class CarResource {
 			return Response.status(Status.NOT_FOUND)
 					.build();
 		} 
-		catch (InternalServerErrorException e) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR)
-					.build();
-		}
-
 	}
 
 }
