@@ -21,7 +21,7 @@ public class FlywayIntegrator implements Integrator {
     private static final Logger log = LogManager.getLogger(FlywayIntegrator.class);
 
     public void integrate(Metadata metadata, SessionFactoryImplementor sessionFactoryImplementor, SessionFactoryServiceRegistry sessionFactoryServiceRegistry) {
-
+    	log.info("Entering integrate!");
         Connection connection = null;
         try {
             DataSource dataSource = (DataSource) sessionFactoryImplementor

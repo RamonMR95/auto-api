@@ -17,6 +17,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.services.CarService;
 import com.ramonmr95.app.utils.CarNotFoundException;
@@ -25,35 +28,47 @@ import com.ramonmr95.app.utils.CarNotFoundException;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CarResource {
+	
+	private static final Logger log = LogManager.getLogger(CarResource.class);
 
 	@EJB
 	private CarService carService;
 
 	@GET
 	public List<Car> getAllCars() {
-		return this.carService.getCars();
+		log.info("Entering getAllCars!");
+		List<Car> cars = this.carService.getCars();
+		log.info("Exiting getAllCars!");
+		return cars;
 	}
 
 	@GET
 	@Path("/{id}")
 	public Response getCarById(@PathParam("id") UUID id) {
+		log.info("Entering getCarById!");
+		Response response = null;
 		try {
 			Car car = this.carService.getCar(id);
 			
-			return Response.status(Status.OK)
+			response = Response.status(Status.OK)
 					.entity(car)
 					.build();
 		} 
 		catch (CarNotFoundException e) {
-			return Response.status(Status.NOT_FOUND)
+			response = Response.status(Status.NOT_FOUND)
 					.build();
-		} 
+			log.error("Error: Car not found!");
+		}
+		log.info("Exiting getCarById!");
+		return response;
 	}
 	
 	@POST
 	public Response createCar(@Valid Car car) {
+		log.info("Entering createCar!");
 		this.carService.createCar(car);
 		
+		log.info("Exiting createCar!");
 		return Response.status(Status.CREATED)
 				.entity(car)
 				.build();
@@ -62,6 +77,9 @@ public class CarResource {
 	@PUT
 	@Path("/{id}")
 	public Response updateCar(@PathParam("id") UUID id, @Valid Car car) {
+		log.info("Entering updateCar!");
+		Response response = null;
+		
 		try {
 			Car newCar = this.carService.getCar(id);
 			newCar.setBrand(car.getBrand());
@@ -70,29 +88,38 @@ public class CarResource {
 			
 			this.carService.updateCar(newCar);
 			
-			return Response.status(Status.OK)
+			response = Response.status(Status.OK)
 					.entity(newCar)
 					.build();
 		}
 		catch (CarNotFoundException e) {
-			return Response.status(Status.NOT_FOUND)
+			response =  Response.status(Status.NOT_FOUND)
 					.build();
+			log.error("Error: Car not found!");
 		} 
+		log.info("Exiting updateCar!");
+		return response;
 	}
 
 	@DELETE
 	@Path("/{id}")
 	public Response deleteCar(@PathParam("id") UUID id) {
+		log.info("Entering deleteCar!");
+		Response response = null;
+		
 		try {
 			this.carService.deleteCar(id);
 			
-			return Response.status(Status.NO_CONTENT)
+			response =  Response.status(Status.NO_CONTENT)
 					.build();
 		}
 		catch (CarNotFoundException e) {
-			return Response.status(Status.NOT_FOUND)
+			response = Response.status(Status.NOT_FOUND)
 					.build();
+			log.error("Error: Car not found!");
 		} 
+		log.info("Exiting deleteCar!");
+		return response;
 	}
 
 }
