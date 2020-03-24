@@ -23,6 +23,7 @@ import com.ramonmr95.app.utils.CarNotFoundException;
 
 @Path("/cars")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class CarResource {
 
 	@EJB
@@ -50,7 +51,6 @@ public class CarResource {
 	}
 	
 	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createCar(@Valid Car car) {
 		this.carService.createCar(car);
 		
@@ -61,7 +61,6 @@ public class CarResource {
 
 	@PUT
 	@Path("/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateCar(@PathParam("id") UUID id, @Valid Car car) {
 		try {
 			Car newCar = this.carService.getCar(id);
