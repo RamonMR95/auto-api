@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.utils.CarNotFoundException;
@@ -17,7 +18,8 @@ public class CarService {
 	private EntityManager em;
 
 	public List<Car> getCars() {
-		return this.em.createQuery("FROM Car", Car.class).getResultList();
+		TypedQuery<Car> query = em.createNamedQuery("Car.findAll", Car.class);
+		return query.getResultList();
 	}
 
 	public Car getCar(UUID id) throws CarNotFoundException {
@@ -33,15 +35,12 @@ public class CarService {
 	}
 
 	public void updateCar(Car car) throws CarNotFoundException {
-		if (getCar(car.getId()) != null) {
-			this.em.merge(car);
-		}
+		getCar(car.getId());
+		this.em.merge(car);
 	}
 
 	public void deleteCar(UUID id) throws CarNotFoundException {
 		Car car = this.getCar(id);
-		if (car != null) {
-			this.em.remove(car);
-		}
+		this.em.remove(car);
 	}
 }
