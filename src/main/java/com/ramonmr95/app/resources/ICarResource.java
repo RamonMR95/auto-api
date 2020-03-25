@@ -8,8 +8,10 @@ import javax.ws.rs.core.Response;
 import com.ramonmr95.app.entities.Car;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 
@@ -37,7 +39,7 @@ public interface ICarResource {
 					@ApiResponse(responseCode = "404", description = "There is not any car with the given id")
 			}
 	)
-	public Response getCarById(UUID id);
+	public Response getCarById(@Parameter(description = "Car id", required = true) UUID id);
 	
 	
 	@Operation(summary = "Create a car",
@@ -50,7 +52,8 @@ public interface ICarResource {
 					@ApiResponse(responseCode = "400", description = "Invalid car"),
 			}
 	)
-	public Response createCar(Car car);
+	public Response createCar(@RequestBody(description = "Car to create", required = true,
+        	content = @Content(schema = @Schema(implementation = Car.class))) Car car);
 	
 	
 	@Operation(summary = "Update a car",
@@ -64,7 +67,9 @@ public interface ICarResource {
 					@ApiResponse(responseCode = "404", description = "There is not any car with the given id")
 			}
 	)
-	public Response updateCar(UUID id, Car car);
+	public Response updateCar(@Parameter(description = "Car id", required = true) UUID id, 
+			@RequestBody(description = "Updated Car", required = true,
+        		content = @Content(schema = @Schema(implementation = Car.class))) Car car);
 	
 	
 	@Operation(summary = "Delete a car",
@@ -73,6 +78,6 @@ public interface ICarResource {
 					@ApiResponse(responseCode = "404", description = "There is not any car with the given id")
 			}
 	)
-	public Response deleteCar(UUID id);
+	public Response deleteCar(@Parameter(description = "Car id", required = true) UUID id);
 	
 }

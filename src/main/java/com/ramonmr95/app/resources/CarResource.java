@@ -24,10 +24,6 @@ import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.services.CarService;
 import com.ramonmr95.app.utils.CarNotFoundException;
 
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 
 @Path("/cars")
@@ -52,7 +48,7 @@ public class CarResource implements ICarResource {
 	@GET
 	@Path("/{id}")
 	@Override
-	public Response getCarById(@Parameter(description = "Car id", required = true) @PathParam("id") UUID id) {
+	public Response getCarById(@PathParam("id") UUID id) {
 		log.info("Entering getCarById!");
 		Response response = null;
 		try {
@@ -73,9 +69,7 @@ public class CarResource implements ICarResource {
 	
 	@POST
 	@Override
-	public Response createCar(@RequestBody(description = "Car to create", required = true,
-        	content = @Content(schema = @Schema(implementation = Car.class))) @Valid Car car) {
-		
+	public Response createCar(@Valid Car car) {
 		log.info("Entering createCar!");
 		this.carService.createCar(car);
 		
@@ -88,10 +82,7 @@ public class CarResource implements ICarResource {
 	@PUT
 	@Path("/{id}")
 	@Override
-	public Response updateCar(@Parameter(description = "Car id", required = true) @PathParam("id") UUID id, 
-			@RequestBody(description = "Updated Car", required = true,
-            	content = @Content(schema = @Schema(implementation = Car.class))) @Valid Car car) {
-		
+	public Response updateCar(@PathParam("id") UUID id, @Valid Car car) {
 		log.info("Entering updateCar!");
 		Response response = null;
 		
@@ -119,7 +110,7 @@ public class CarResource implements ICarResource {
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteCar(@Parameter(description = "Car id", required = true) @PathParam("id") UUID id) {
+	public Response deleteCar(@PathParam("id") UUID id) {
 		log.info("Entering deleteCar!");
 		Response response = null;
 		
