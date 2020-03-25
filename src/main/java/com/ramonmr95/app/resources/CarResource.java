@@ -48,7 +48,7 @@ import io.swagger.v3.oas.annotations.info.Contact;
 @Path("/cars")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class CarResource {
+public class CarResource implements ICarResource {
 	
 	private static final Logger log = LogManager.getLogger(CarResource.class);
 
@@ -56,15 +56,7 @@ public class CarResource {
 	private CarService carService;
 
 	@GET
-	@Operation(summary = "Get all cars",
-		responses = {
-				@ApiResponse(
-						responseCode = "200", 
-						description = "Gets all the cars",
-						content = @Content(mediaType = "application/json",
-						schema = @Schema(implementation = Car.class)))
-		}
-	)
+	@Override
 	public List<Car> getAllCars() {
 		log.info("Entering getAllCars!");
 		List<Car> cars = this.carService.getCars();
@@ -74,16 +66,7 @@ public class CarResource {
 
 	@GET
 	@Path("/{id}")
-	@Operation(summary = "Get car by id",
-		responses = {
-				@ApiResponse(
-						responseCode = "200", 
-						description = "Gets the car related to an specific id",
-						content = @Content(mediaType = "application/json",
-						schema = @Schema(implementation = Car.class))),
-				@ApiResponse(responseCode = "404", description = "There is not any car with the given id")
-		}
-	)
+	@Override
 	public Response getCarById(
 			@Parameter(description = "Car id", required = true) @PathParam("id") UUID id) {
 		
@@ -106,16 +89,7 @@ public class CarResource {
 	}
 	
 	@POST
-	@Operation(summary = "Create a car",
-		responses = {
-				@ApiResponse(
-						responseCode = "201",
-						description = "Car created",
-						content = @Content(mediaType = "application/json",
-						schema = @Schema(implementation = Car.class))),
-				@ApiResponse(responseCode = "400", description = "Invalid car"),
-		}
-	)
+	@Override
 	public Response createCar(@RequestBody(description = "Car to create", required = true,
         	content = @Content(schema = @Schema(implementation = Car.class))) @Valid Car car) {
 		
@@ -130,17 +104,7 @@ public class CarResource {
 
 	@PUT
 	@Path("/{id}")
-	@Operation(summary = "Update a car",
-		responses = {
-				@ApiResponse(
-					responseCode = "200",
-					description = "Car updated",
-					content = @Content(mediaType = "application/json",
-					schema = @Schema(implementation = Car.class))),
-				@ApiResponse(responseCode = "400", description = "Invalid car"),
-				@ApiResponse(responseCode = "404", description = "There is not any car with the given id")
-		}
-	)
+	@Override
 	public Response updateCar(@Parameter(description = "Car id", required = true) @PathParam("id") UUID id, 
 			@RequestBody(description = "Updated Car", required = true,
             	content = @Content(schema = @Schema(implementation = Car.class))) @Valid Car car) {
@@ -171,12 +135,7 @@ public class CarResource {
 
 	@DELETE
 	@Path("/{id}")
-	@Operation(summary = "Delete a car",
-		responses = {
-				@ApiResponse(responseCode = "204", description = "The car was deleted"),
-				@ApiResponse(responseCode = "404", description = "There is not any car with the given id")
-		}
-	)
+	@Override
 	public Response deleteCar(@Parameter(description = "Id of the car", required = true) @PathParam("id") UUID id) {
 		log.info("Entering deleteCar!");
 		Response response = null;
