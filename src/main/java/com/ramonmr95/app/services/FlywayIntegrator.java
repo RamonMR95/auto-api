@@ -1,5 +1,7 @@
 package com.ramonmr95.app.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.internal.util.jdbc.JdbcUtils;
 import org.hibernate.boot.Metadata;
@@ -12,16 +14,14 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class FlywayIntegrator implements Integrator {
 
-    private static final String SCRIPT_LOCATIONS = "db/migration";
-    private static Logger log = LoggerFactory.getLogger(FlywayIntegrator.class);
+//    private static final String SCRIPT_LOCATIONS = "db/migration";
+    private static final Logger log = LogManager.getLogger(FlywayIntegrator.class);
 
     public void integrate(Metadata metadata, SessionFactoryImplementor sessionFactoryImplementor, SessionFactoryServiceRegistry sessionFactoryServiceRegistry) {
-
+    	log.info("Entering integrate!");
         Connection connection = null;
         try {
             DataSource dataSource = (DataSource) sessionFactoryImplementor
@@ -31,7 +31,7 @@ public class FlywayIntegrator implements Integrator {
             connection = dataSource.getConnection();
 
             Flyway flyway = new Flyway();
-            flyway.setLocations(SCRIPT_LOCATIONS);
+//            flyway.setLocations(SCRIPT_LOCATIONS);
             flyway.setDataSource(dataSource);
             flyway.setBaselineOnMigrate(true);
             flyway.migrate();

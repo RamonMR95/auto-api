@@ -1,0 +1,29 @@
+
+Configutation:
+  name: YAMLConfigTest
+  Properties:
+    Property:
+      name: filename
+      value: C:\\logs\\app.log
+  Appenders:
+    Console:
+      name: STDOUT
+      PatternLayout:
+        pattern: "%m%n"
+      Filters:
+        ThresholdFilter:
+           level: debug
+    File:
+      name: File
+      fileName: ${filename}
+      PatternLayout:
+        pattern: "%d %p %C{1.} [%t] %m%n"
+      Filters:
+         ThresholdFilter:
+            level: info
+  Loggers:
+      Root:
+        level: debug
+        AppenderRef:
+          - ref: STDOUT
+          - ref: File
