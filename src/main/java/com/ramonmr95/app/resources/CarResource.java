@@ -24,10 +24,12 @@ import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.services.CarService;
 import com.ramonmr95.app.utils.CarNotFoundException;
 
+
+
 @Path("/cars")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class CarResource {
+public class CarResource implements ICarResource {
 	
 	private static final Logger log = LogManager.getLogger(CarResource.class);
 
@@ -35,6 +37,7 @@ public class CarResource {
 	private CarService carService;
 
 	@GET
+	@Override
 	public List<Car> getAllCars() {
 		log.info("Entering getAllCars!");
 		List<Car> cars = this.carService.getCars();
@@ -44,6 +47,7 @@ public class CarResource {
 
 	@GET
 	@Path("/{id}")
+	@Override
 	public Response getCarById(@PathParam("id") UUID id) {
 		log.info("Entering getCarById!");
 		Response response = null;
@@ -64,6 +68,7 @@ public class CarResource {
 	}
 	
 	@POST
+	@Override
 	public Response createCar(@Valid Car car) {
 		log.info("Entering createCar!");
 		this.carService.createCar(car);
@@ -76,6 +81,7 @@ public class CarResource {
 
 	@PUT
 	@Path("/{id}")
+	@Override
 	public Response updateCar(@PathParam("id") UUID id, @Valid Car car) {
 		log.info("Entering updateCar!");
 		Response response = null;
@@ -103,6 +109,7 @@ public class CarResource {
 
 	@DELETE
 	@Path("/{id}")
+	@Override
 	public Response deleteCar(@PathParam("id") UUID id) {
 		log.info("Entering deleteCar!");
 		Response response = null;
