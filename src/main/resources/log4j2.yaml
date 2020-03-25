@@ -8,6 +8,7 @@ Configutation:
   Appenders:
     Console:
       name: STDOUT
+      target: SYSTEM_OUT
       PatternLayout:
         pattern: "%m%n"
       Filters:
