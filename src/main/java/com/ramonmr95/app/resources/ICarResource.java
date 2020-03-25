@@ -3,16 +3,28 @@ package com.ramonmr95.app.resources;
 import java.util.List;
 import java.util.UUID;
 
-import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
 import com.ramonmr95.app.entities.Car;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
+@OpenAPIDefinition (info = 
+@Info(
+      title = "Cars",
+      version = "0.1",
+      description = "Cars API",
+      license = @License(name = "Apache 2.0"),
+      contact = @Contact(name = "Ramón Moñino Rubio", email = "ramonmr16@gmail.com")
+  )
+)
 public interface ICarResource {
 	
 	@Operation(summary = "Get all cars",

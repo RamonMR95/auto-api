@@ -24,27 +24,12 @@ import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.services.CarService;
 import com.ramonmr95.app.utils.CarNotFoundException;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.info.License;
-import io.swagger.v3.oas.annotations.info.Contact;
 
 
-@OpenAPIDefinition (info = 
-	@Info(
-          title = "Cars",
-          version = "0.1",
-          description = "Cars API",
-          license = @License(name = "Apache 2.0"),
-          contact = @Contact(name = "Ramón Moñino Rubio", email = "ramonmr16@gmail.com")
-	  )
-)
 @Path("/cars")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -67,9 +52,7 @@ public class CarResource implements ICarResource {
 	@GET
 	@Path("/{id}")
 	@Override
-	public Response getCarById(
-			@Parameter(description = "Car id", required = true) @PathParam("id") UUID id) {
-		
+	public Response getCarById(@Parameter(description = "Car id", required = true) @PathParam("id") UUID id) {
 		log.info("Entering getCarById!");
 		Response response = null;
 		try {
@@ -136,7 +119,7 @@ public class CarResource implements ICarResource {
 	@DELETE
 	@Path("/{id}")
 	@Override
-	public Response deleteCar(@Parameter(description = "Id of the car", required = true) @PathParam("id") UUID id) {
+	public Response deleteCar(@Parameter(description = "Car id", required = true) @PathParam("id") UUID id) {
 		log.info("Entering deleteCar!");
 		Response response = null;
 		
