@@ -24,6 +24,27 @@ import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.services.CarService;
 import com.ramonmr95.app.utils.CarNotFoundException;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.info.License;
+import io.swagger.v3.oas.annotations.info.Contact;
+
+
+@OpenAPIDefinition (info = 
+	@Info(
+          title = "Cars",
+          version = "0.1",
+          description = "Cars API",
+          license = @License(name = "Apache 2.0"),
+          contact = @Contact(name = "Ramón Moñino Rubio", email = "ramonmr16@gmail.com")
+	  )
+)
 @Path("/cars")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -35,6 +56,15 @@ public class CarResource {
 	private CarService carService;
 
 	@GET
+	@Operation(summary = "Get all cars",
+		responses = {
+				@ApiResponse(
+						responseCode = "200", 
+						description = "Gets all the cars",
+						content = @Content(mediaType = "application/json",
+						schema = @Schema(implementation = Car.class)))
+		}
+	)
 	public List<Car> getAllCars() {
 		log.info("Entering getAllCars!");
 		List<Car> cars = this.carService.getCars();
@@ -44,7 +74,19 @@ public class CarResource {
 
 	@GET
 	@Path("/{id}")
-	public Response getCarById(@PathParam("id") UUID id) {
+	@Operation(summary = "Get car by id",
+		responses = {
+				@ApiResponse(
+						responseCode = "200", 
+						description = "Gets the car related to an specific id",
+						content = @Content(mediaType = "application/json",
+						schema = @Schema(implementation = Car.class))),
+				@ApiResponse(responseCode = "404", description = "There is not any car with the given id")
+		}
+	)
+	public Response getCarById(
+			@Parameter(description = "Car id", required = true) @PathParam("id") UUID id) {
+		
 		log.info("Entering getCarById!");
 		Response response = null;
 		try {
@@ -64,7 +106,19 @@ public class CarResource {
 	}
 	
 	@POST
-	public Response createCar(@Valid Car car) {
+	@Operation(summary = "Create a car",
+		responses = {
+				@ApiResponse(
+						responseCode = "201",
+						description = "Car created",
+						content = @Content(mediaType = "application/json",
+						schema = @Schema(implementation = Car.class))),
+				@ApiResponse(responseCode = "400", description = "Invalid car"),
+		}
+	)
+	public Response createCar(@RequestBody(description = "Car to create", required = true,
+        	content = @Content(schema = @Schema(implementation = Car.class))) @Valid Car car) {
+		
 		log.info("Entering createCar!");
 		this.carService.createCar(car);
 		
@@ -76,7 +130,21 @@ public class CarResource {
 
 	@PUT
 	@Path("/{id}")
-	public Response updateCar(@PathParam("id") UUID id, @Valid Car car) {
+	@Operation(summary = "Update a car",
+		responses = {
+				@ApiResponse(
+					responseCode = "200",
+					description = "Car updated",
+					content = @Content(mediaType = "application/json",
+					schema = @Schema(implementation = Car.class))),
+				@ApiResponse(responseCode = "400", description = "Invalid car"),
+				@ApiResponse(responseCode = "404", description = "There is not any car with the given id")
+		}
+	)
+	public Response updateCar(@Parameter(description = "Car id", required = true) @PathParam("id") UUID id, 
+			@RequestBody(description = "Updated Car", required = true,
+            	content = @Content(schema = @Schema(implementation = Car.class))) @Valid Car car) {
+		
 		log.info("Entering updateCar!");
 		Response response = null;
 		
@@ -103,7 +171,13 @@ public class CarResource {
 
 	@DELETE
 	@Path("/{id}")
-	public Response deleteCar(@PathParam("id") UUID id) {
+	@Operation(summary = "Delete a car",
+		responses = {
+				@ApiResponse(responseCode = "204", description = "The car was deleted"),
+				@ApiResponse(responseCode = "404", description = "There is not any car with the given id")
+		}
+	)
+	public Response deleteCar(@Parameter(description = "Id of the car", required = true) @PathParam("id") UUID id) {
 		log.info("Entering deleteCar!");
 		Response response = null;
 		
