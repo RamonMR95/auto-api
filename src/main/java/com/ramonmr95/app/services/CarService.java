@@ -1,18 +1,27 @@
 package com.ramonmr95.app.services;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.utils.CarNotFoundException;
+import com.ramonmr95.app.utils.EntityValidationException;
 
 @Stateless
 public class CarService {
@@ -39,17 +48,23 @@ public class CarService {
 		throw new CarNotFoundException();
 	}
 
-	public void createCar(Car car) {
-		log.info("Entering createCar");
-		this.em.persist(car);
-		log.info("Exiting createCar");
+	public void createCar(Car car) throws EntityValidationException {
+		if (isCarValid(car)) {
+			this.em.persist(car);
+		}
+		else {
+			throw new EntityValidationException();
+		}
 	}
 
-	public void updateCar(Car car) throws CarNotFoundException {
-		log.info("Entering updateCar");
+	public void updateCar(Car car) throws CarNotFoundException, EntityValidationException {
 		getCar(car.getId());
-		this.em.merge(car);
-		log.info("Exiting updateCar");
+		if (isCarValid(car)) {
+			this.em.merge(car);
+		}
+		else {
+			throw new EntityValidationException();
+		}
 	}
 
 	public void deleteCar(UUID id) throws CarNotFoundException {
@@ -58,4 +73,24 @@ public class CarService {
 		this.em.remove(car);
 		log.info("Exiting deleteCar");
 	}
+	
+	public Map<String, Set<String>> getCarValidationErrors(Car car) {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+		Set<ConstraintViolation<Car>> validationErrors = validator.validate(car);
+		Set<String> errorsSet = new HashSet<String>();
+		
+		for (ConstraintViolation<Car> constraintViolation : validationErrors) {
+			errorsSet.add(constraintViolation.getMessage());
+		}
+		
+		Map<String, Set<String>> errors = new HashMap<String, Set<String>>();
+		errors.put("errors", errorsSet);
+		return errors;
+	}
+	
+	private boolean isCarValid(Car car) {
+		return this.getCarValidationErrors(car).get("errors").isEmpty();
+	}
+	
 }
