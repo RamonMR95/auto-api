@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -16,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-
 import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.services.CarService;
 import com.ramonmr95.app.utils.CarNotFoundException;
@@ -25,6 +25,7 @@ import com.ramonmr95.app.utils.EntityValidationException;
 @Path("/cars")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Stateless
 public class CarResource implements ICarResource {
 
 	@EJB
