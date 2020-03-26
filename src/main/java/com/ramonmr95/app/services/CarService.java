@@ -1,12 +1,20 @@
 package com.ramonmr95.app.services;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -57,5 +65,20 @@ public class CarService {
 		Car car = this.getCar(id);
 		this.em.remove(car);
 		log.info("Exiting deleteCar");
+	}
+	
+	public Map<String, Set<String>> getCarValidationErrors(Car car) {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+		Set<ConstraintViolation<Car>> validationErrors = validator.validate(car);
+		Set<String> errorsSet = new HashSet<String>();
+		
+		for (ConstraintViolation<Car> constraintViolation : validationErrors) {
+			errorsSet.add(constraintViolation.getMessage());
+		}
+		
+		Map<String, Set<String>> errors = new HashMap<String, Set<String>>();
+		errors.put("errors", errorsSet);
+		return errors;
 	}
 }
