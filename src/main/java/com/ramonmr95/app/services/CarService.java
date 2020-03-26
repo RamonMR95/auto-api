@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.utils.CarNotFoundException;
+import com.ramonmr95.app.utils.EntityValidationException;
 
 @Stateless
 public class CarService {
@@ -47,17 +48,23 @@ public class CarService {
 		throw new CarNotFoundException();
 	}
 
-	public void createCar(Car car) {
-		log.info("Entering createCar");
-		this.em.persist(car);
-		log.info("Exiting createCar");
+	public void createCar(Car car) throws EntityValidationException {
+		if (isCarValid(car)) {
+			this.em.persist(car);
+		}
+		else {
+			throw new EntityValidationException();
+		}
 	}
 
-	public void updateCar(Car car) throws CarNotFoundException {
-		log.info("Entering updateCar");
+	public void updateCar(Car car) throws CarNotFoundException, EntityValidationException {
 		getCar(car.getId());
-		this.em.merge(car);
-		log.info("Exiting updateCar");
+		if (isCarValid(car)) {
+			this.em.merge(car);
+		}
+		else {
+			throw new EntityValidationException();
+		}
 	}
 
 	public void deleteCar(UUID id) throws CarNotFoundException {
@@ -81,4 +88,9 @@ public class CarService {
 		errors.put("errors", errorsSet);
 		return errors;
 	}
+	
+	private boolean isCarValid(Car car) {
+		return this.getCarValidationErrors(car).get("errors").isEmpty();
+	}
+	
 }

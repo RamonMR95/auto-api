@@ -1,8 +1,6 @@
 package com.ramonmr95.app.resources;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.ejb.EJB;
@@ -22,6 +20,7 @@ import javax.ws.rs.core.Response.Status;
 import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.services.CarService;
 import com.ramonmr95.app.utils.CarNotFoundException;
+import com.ramonmr95.app.utils.EntityValidationException;
 
 @Path("/cars")
 @Produces(MediaType.APPLICATION_JSON)
@@ -59,31 +58,27 @@ public class CarResource implements ICarResource {
 	@POST
 	@Override
 	public Response createCar(Car car) {
-		Map<String, Set<String>> validationErrors = this.carService.getCarValidationErrors(car);
+		Response response = null;
 		
-		if (!validationErrors.get("errors").isEmpty()) {
-			return Response.status(Status.BAD_REQUEST)
-					.entity(validationErrors)
+		try {
+			this.carService.createCar(car);
+			response = Response.status(Status.CREATED)
+					.entity(car)
+					.build();
+		} 
+		catch (EntityValidationException e) {
+			response = Response.status(Status.BAD_REQUEST)
+					.entity(this.carService.getCarValidationErrors(car))
 					.build();
 		}
-		this.carService.createCar(car);
-		return Response.status(Status.CREATED)
-				.entity(car)
-				.build();
+		return response;
 	}
 
 	@PUT
 	@Path("/{id}")
 	@Override
 	public Response updateCar(@PathParam("id") UUID id, Car car) {
-		Map<String, Set<String>> validationErrors = this.carService.getCarValidationErrors(car);
 		Response response = null;
-		
-		if (!validationErrors.get("errors").isEmpty()) {
-			return Response.status(Status.BAD_REQUEST)
-					.entity(validationErrors)
-					.build();
-		}
 		
 		try {
 			Car newCar = this.carService.getCar(id);
@@ -97,10 +92,15 @@ public class CarResource implements ICarResource {
 					.entity(newCar)
 					.build();
 		} 
+		catch (EntityValidationException e) {
+			response = Response.status(Status.BAD_REQUEST)
+					.entity(this.carService.getCarValidationErrors(car))
+					.build();
+		}
 		catch (CarNotFoundException e) {
 			response = Response.status(Status.NOT_FOUND)
 					.build();
-		}
+		} 
 		return response;
 	}
 
@@ -121,5 +121,5 @@ public class CarResource implements ICarResource {
 		}
 		return response;
 	}
-
+	
 }
