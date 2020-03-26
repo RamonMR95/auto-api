@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ramonmr95.app.entities.Car;
+import com.ramonmr95.app.utils.EntityValidationException;
 
 @Startup
 @Singleton
@@ -31,9 +32,11 @@ public class DBMigration {
 				new Car("Mercedes", "Germany", new Timestamp(new Date().getTime())), 
 				new Car("Seat", "Spain", new Timestamp(new Date().getTime())));
 		
-		for (Car car : cars) {
-			this.carService.createCar(car);
-		}
+		try {
+			for (Car car : cars) 
+				this.carService.createCar(car);
+		} 
+		catch (EntityValidationException e) {}
 		log.info("Exiting setup");
 	}
 
