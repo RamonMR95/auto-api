@@ -1,0 +1,521 @@
+{
+	"info": {
+		"_postman_id": "d78397cd-7411-42a5-96bd-6cbb62480ed2",
+		"name": "Backend auto",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auto Create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e0150825-50d3-4b5c-8335-03e0559ae0a4",
+						"exec": [
+							"// Checking response code with validation errors.",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"",
+							"",
+							"// Setting up cardId global variable.",
+							"var jsonData = pm.response.json();",
+							"pm.globals.set(\"carId\", jsonData.id);",
+							"",
+							"",
+							"// Checking all json values.",
+							"pm.test(\"Checking brand\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.brand).to.eql(\"Mazda\");",
+							"});",
+							"",
+							"pm.test(\"Checking country\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.country).to.eql(\"Japan\");",
+							"});",
+							"",
+							"pm.test(\"Checking registration\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.registration).to.eql(\"2020-03-24T09:13:26.441+01:00\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"brand\": \"Mazda\",\n\t\"country\":\"Japan\",\n\t\"registration\": \"2020-03-24T09:13:26.441+01:00\"\n}\n\t\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiHost}}/auto/cars",
+					"host": [
+						"{{apiHost}}"
+					],
+					"path": [
+						"auto",
+						"cars"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auto 400 Create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "818cc97d-3d1c-4fa4-bec8-c38aab1db2ff",
+						"exec": [
+							"// Checking response code with validation errors.",
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"",
+							"var schema = {",
+							"  \"errors\": [",
+							"        \"The registration date is required\"",
+							"    ]",
+							"};",
+							"",
+							"// Checking errors",
+							"pm.test(\"Checking errors (entire response)\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql(schema);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Checking errors\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.errors).to.eql(['The registration date is required']);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"brand\": \"Mazda\",\n\t\"country\":\"Japan\"\n}\n\t",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiHost}}/auto/cars",
+					"host": [
+						"{{apiHost}}"
+					],
+					"path": [
+						"auto",
+						"cars"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auto Gel all cars",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "750be54f-e092-4cf4-bdf0-8d3f083e9c18",
+						"exec": [
+							"// Checking response code.",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apiHost}}/auto/cars",
+					"host": [
+						"{{apiHost}}"
+					],
+					"path": [
+						"auto",
+						"cars"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auto Get car by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8efe6561-99ef-407e-bf39-1621836ce650",
+						"exec": [
+							"// Checking response code with valid car id",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apiHost}}/auto/cars/{{carId}}",
+					"host": [
+						"{{apiHost}}"
+					],
+					"path": [
+						"auto",
+						"cars",
+						"{{carId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auto 404 Get car by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "205fe84d-89f6-4498-883d-00e0d4dba17c",
+						"exec": [
+							"// Checking response status with invalid car id",
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apiHost}}/auto/cars/123123213",
+					"host": [
+						"{{apiHost}}"
+					],
+					"path": [
+						"auto",
+						"cars",
+						"123123213"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auto Update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "67bb914b-f392-4b2c-9515-e22c328ff101",
+						"exec": [
+							"// Checking response code with a valid.",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"// Checking all json values.",
+							"pm.test(\"Checking id\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.globals.get(\"carId\"));",
+							"});",
+							"",
+							"pm.test(\"Checking brand\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.brand).to.eql(\"Opel\");",
+							"});",
+							"",
+							"pm.test(\"Checking country\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.country).to.eql(\"Spain\");",
+							"});",
+							"",
+							"pm.test(\"Checking registration\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.registration).to.eql(\"2020-03-24T09:13:26.441+01:00\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"brand\": \"Opel\",\n\t\"country\":\"Spain\",\n\t\"registration\": \"2020-03-24T09:13:26.441+01:00\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiHost}}/auto/cars/{{carId}}",
+					"host": [
+						"{{apiHost}}"
+					],
+					"path": [
+						"auto",
+						"cars",
+						"{{carId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auto 400 Update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "160c1d28-8fdd-47a1-9c94-efcad6578ca1",
+						"exec": [
+							"// Checking response code with validation errors.",
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"",
+							"var schema = {",
+							"  \"errors\": [",
+							"        \"The registration date is required\"",
+							"    ]",
+							"};",
+							"",
+							"// Checking errors",
+							"pm.test(\"Checking errors (entire response)\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql(schema);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"brand\": \"Opel\",\n\t\"country\":\"Spain\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiHost}}/auto/cars/{{carId}}",
+					"host": [
+						"{{apiHost}}"
+					],
+					"path": [
+						"auto",
+						"cars",
+						"{{carId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auto 404 Update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "19ac262c-ed99-4a65-97af-6957fcb0acf0",
+						"exec": [
+							"// Checking response status with invalid car id",
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"brand\": \"Opel\",\n\t\"country\":\"Spain\",\n\t\"registration\": \"2020-03-24T09:13:26.441+01:00\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiHost}}/auto/cars/2131231231",
+					"host": [
+						"{{apiHost}}"
+					],
+					"path": [
+						"auto",
+						"cars",
+						"2131231231"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auto Delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ad376721-7c44-425e-a368-115f2faf81c6",
+						"exec": [
+							"// Checking response code with a valid id.",
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{apiHost}}/auto/cars/{{carId}}",
+					"host": [
+						"{{apiHost}}"
+					],
+					"path": [
+						"auto",
+						"cars",
+						"{{carId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auto 404 Delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "26c5bd32-1b0f-4741-9220-e115610305b8",
+						"exec": [
+							"// Checking response code with wrong id.",
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{apiHost}}/auto/cars/de658494-6407-405",
+					"host": [
+						"{{apiHost}}"
+					],
+					"path": [
+						"auto",
+						"cars",
+						"de658494-6407-405"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Swagger API",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apiHost}}/auto/openapi",
+					"host": [
+						"{{apiHost}}"
+					],
+					"path": [
+						"auto",
+						"openapi"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "3c0b6d39-5b0b-4f77-86ee-c5522cf44d4a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "5b48090b-0932-4173-9a75-a286c385731b",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "6ad592e6-6f0a-43b7-aaf9-cab34d3f7ded",
+			"key": "apiHost",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
