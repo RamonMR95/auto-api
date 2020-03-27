@@ -9,25 +9,22 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import javax.interceptor.Interceptors;
 
 import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.utils.EntityValidationException;
+import com.ramonmr95.app.utils.LoggingInterceptor;
 
 @Startup
 @Singleton
+@Interceptors(LoggingInterceptor.class)
 public class DBMigration {
-	
-	private static final Logger log = LogManager.getLogger(DBMigration.class);
 	
 	@EJB
 	private CarService carService;
 	
 	@PostConstruct
 	public void setup() {
-		log.info("Entering setup");
 		List<Car> cars = Arrays.asList(new Car("BMW", "Germany", new Timestamp(new Date().getTime())),
 				new Car("Mercedes", "Germany", new Timestamp(new Date().getTime())), 
 				new Car("Seat", "Spain", new Timestamp(new Date().getTime())));
@@ -37,7 +34,6 @@ public class DBMigration {
 				this.carService.createCar(car);
 		} 
 		catch (EntityValidationException e) {}
-		log.info("Exiting setup");
 	}
 
 }
