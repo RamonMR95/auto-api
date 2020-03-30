@@ -7,11 +7,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -31,16 +29,15 @@ public class CarService {
 	
 	private final Logger log = LogManager.getLogger(CarService.class);
 	
-	@PersistenceContext(unitName = "carPU")
-	private EntityManager em;
-
+	@EJB
+	private PersistenceService<Car, UUID> persistenceService;
+	
 	public List<Car> getCars() {
-		TypedQuery<Car> query = em.createNamedQuery("Car.findAll", Car.class);
-		return query.getResultList();
+		return this.persistenceService.getEntitiesWithNamedQuery("Car.findAll", Car.class);
 	}
 
 	public Car getCar(UUID id) throws CarNotFoundException {
-		Car car = this.em.find(Car.class, id);
+		Car car = this.persistenceService.getEntityByID(Car.class, id);
 		if (car != null) {
 			return car;
 		}
@@ -50,7 +47,7 @@ public class CarService {
 
 	public void createCar(Car car) throws EntityValidationException {
 		if (isCarValid(car)) {
-			this.em.persist(car);
+			this.persistenceService.persistEntity(car);
 		}
 		else {
 			log.error("The car does not fulfill all of the validations");
@@ -61,7 +58,7 @@ public class CarService {
 	public void updateCar(Car car) throws CarNotFoundException, EntityValidationException {
 		getCar(car.getId());
 		if (isCarValid(car)) {
-			this.em.merge(car);
+			this.persistenceService.mergeEntity(car);
 		}
 		else {
 			log.error("The car does not fulfill all of the validations");
@@ -71,7 +68,7 @@ public class CarService {
 
 	public void deleteCar(UUID id) throws CarNotFoundException {
 		Car car = this.getCar(id);
-		this.em.remove(car);
+		this.persistenceService.deleteEntity(car);
 	}
 	
 	public Map<String, Set<String>> getCarValidationErrors(Car car) {
