@@ -37,7 +37,8 @@ public class CarResourceImpl implements ICarResource {
 	@Override
 	public Response getAllCars() {
 		List<Car> list = this.carService.getCars();
-		GenericEntity<List<Car>> entity = new GenericEntity<List<Car>>(list) {};
+		GenericEntity<List<Car>> entity = new GenericEntity<List<Car>>(list) {
+		};
 		Response response = Response.ok(entity).build();
 		return response;
 	}
@@ -49,13 +50,9 @@ public class CarResourceImpl implements ICarResource {
 		Response response = null;
 		try {
 			Car car = this.carService.getCar(id);
-			response = Response.status(Status.OK)
-					.entity(car)
-					.build();
-		} 
-		catch (EntityNotFoundException e) {
-			response = Response.status(Status.NOT_FOUND)
-					.build();
+			response = Response.status(Status.OK).entity(car).build();
+		} catch (EntityNotFoundException e) {
+			response = Response.status(Status.NOT_FOUND).build();
 		}
 		return response;
 	}
@@ -64,17 +61,12 @@ public class CarResourceImpl implements ICarResource {
 	@Override
 	public Response createCar(Car car) {
 		Response response = null;
-		
+
 		try {
 			this.carService.createCar(car);
-			response = Response.status(Status.CREATED)
-					.entity(car)
-					.build();
-		} 
-		catch (EntityValidationException e) {
-			response = Response.status(Status.BAD_REQUEST)
-					.entity(this.carService.getCarValidationErrors(car))
-					.build();
+			response = Response.status(Status.CREATED).entity(car).build();
+		} catch (EntityValidationException e) {
+			response = Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 		return response;
 	}
@@ -84,7 +76,7 @@ public class CarResourceImpl implements ICarResource {
 	@Override
 	public Response updateCar(@PathParam("id") UUID id, Car car) {
 		Response response = null;
-		
+
 		try {
 			Car newCar = this.carService.getCar(id);
 			newCar.setBrand(car.getBrand());
@@ -93,19 +85,12 @@ public class CarResourceImpl implements ICarResource {
 
 			this.carService.updateCar(newCar);
 
-			response = Response.status(Status.OK)
-					.entity(newCar)
-					.build();
-		} 
-		catch (EntityValidationException e) {
-			response = Response.status(Status.BAD_REQUEST)
-					.entity(this.carService.getCarValidationErrors(car))
-					.build();
+			response = Response.status(Status.OK).entity(newCar).build();
+		} catch (EntityValidationException e) {
+			response = Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		} catch (EntityNotFoundException e) {
+			response = Response.status(Status.NOT_FOUND).build();
 		}
-		catch (EntityNotFoundException e) {
-			response = Response.status(Status.NOT_FOUND)
-					.build();
-		} 
 		return response;
 	}
 
@@ -117,14 +102,11 @@ public class CarResourceImpl implements ICarResource {
 
 		try {
 			this.carService.deleteCar(id);
-			response = Response.status(Status.NO_CONTENT)
-					.build();
-		} 
-		catch (EntityNotFoundException e) {
-			response = Response.status(Status.NOT_FOUND)
-					.build();
+			response = Response.status(Status.NO_CONTENT).build();
+		} catch (EntityNotFoundException e) {
+			response = Response.status(Status.NOT_FOUND).build();
 		}
 		return response;
 	}
-	
+
 }
