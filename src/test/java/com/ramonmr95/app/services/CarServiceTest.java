@@ -24,7 +24,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.ramonmr95.app.entities.Car;
-import com.ramonmr95.app.utils.CarNotFoundException;
+import com.ramonmr95.app.utils.EntityNotFoundException;
 import com.ramonmr95.app.utils.EntityValidationException;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -86,7 +86,7 @@ public class CarServiceTest {
 			when(this.persistenceService.getEntityByID(Car.class, carId)).thenReturn(car);
 			Car carTest = this.carService.getCar(carId);
 			assertEquals(car, carTest);
-		} catch (CarNotFoundException e) {
+		} catch (EntityNotFoundException e) {
 			fail("Should not get here");
 		}
 	}
@@ -100,7 +100,7 @@ public class CarServiceTest {
 			doNothing().when(this.persistenceService).mergeEntity(car);
 			this.carService.updateCar(car);
 			assertEquals(car.getBrand(), brand);
-		} catch (CarNotFoundException | EntityValidationException e) {
+		} catch (EntityNotFoundException | EntityValidationException e) {
 			fail("Should not get here");
 		}
 	}
@@ -112,7 +112,7 @@ public class CarServiceTest {
 			doNothing().when(persistenceService).deleteEntity(car);
 			this.carService.deleteCar(carId);
 			Mockito.verify(this.persistenceService, Mockito.times(1)).deleteEntity(car);
-		} catch (CarNotFoundException e) {
+		} catch (EntityNotFoundException e) {
 			fail("Should not get here");
 		}
 	}
@@ -142,7 +142,7 @@ public class CarServiceTest {
 			when(this.persistenceService.getEntityByID(Car.class, id)).thenReturn(null);
 			this.carService.getCar(id);
 			fail("Should not get here");
-		} catch (CarNotFoundException e) {
+		} catch (EntityNotFoundException e) {
 		}
 	}
 
@@ -152,19 +152,19 @@ public class CarServiceTest {
 			UUID id = UUID.fromString("e72fd0a4-f7a5-42d4-908e-7bc1dc62f000");
 			when(this.persistenceService.getEntityByID(Car.class, id)).thenReturn(null);
 			when(this.carService.getCar(id)).thenReturn(car);
-			doThrow(CarNotFoundException.class).when(this.carService).updateCar(car);
+			doThrow(EntityNotFoundException.class).when(this.carService).updateCar(car);
 			car.setBrand("X");
 			this.carService.updateCar(car);
 			fail("Should not get here");
 		} catch (EntityValidationException e) {
 			fail("Should not get here");
-		} catch (CarNotFoundException e) {
+		} catch (EntityNotFoundException e) {
 		}
 	}
 
 	@Test
 	public void whenUpdatingACarWithAValidIDAndEntityValidationErrors_ShouldThrowEntityValidationException()
-			throws CarNotFoundException {
+			throws EntityNotFoundException {
 		try {
 			when(this.persistenceService.getEntityByID(Car.class, carId)).thenReturn(car);
 			car.setBrand(null);
@@ -172,7 +172,7 @@ public class CarServiceTest {
 			fail("Should not get here");
 		} catch (EntityValidationException e) {
 			
-		} catch (CarNotFoundException e) {
+		} catch (EntityNotFoundException e) {
 			fail("Should not get here");
 		}
 	}
@@ -184,7 +184,7 @@ public class CarServiceTest {
 			when(this.persistenceService.getEntityByID(Car.class, id)).thenReturn(null);
 			this.carService.deleteCar(id);
 			fail("Should not get here");
-		} catch (CarNotFoundException e) {
+		} catch (EntityNotFoundException e) {
 		}
 	}
 

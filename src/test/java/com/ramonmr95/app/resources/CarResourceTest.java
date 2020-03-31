@@ -27,14 +27,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.services.CarService;
-import com.ramonmr95.app.utils.CarNotFoundException;
+import com.ramonmr95.app.utils.EntityNotFoundException;
 import com.ramonmr95.app.utils.EntityValidationException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CarResourceTest {
 
 	@InjectMocks
-	private CarResource carResource;
+	private CarResourceImpl carResource;
 
 	@Mock
 	private CarService carService;
@@ -98,7 +98,7 @@ public class CarResourceTest {
 			Response response = this.carResource.getCarById(car.getId());
 			assertEquals(car, response.getEntity());
 			assertEquals(Status.OK.getStatusCode(), response.getStatus());
-		} catch (CarNotFoundException e) {
+		} catch (EntityNotFoundException e) {
 			fail("Should not get here");
 		}
 	}
@@ -113,7 +113,7 @@ public class CarResourceTest {
 			Response response = this.carResource.updateCar(carId, car);
 			assertEquals(car.getBrand(), ((Car) response.getEntity()).getBrand());
 			assertEquals(Status.OK.getStatusCode(), response.getStatus());
-		} catch (CarNotFoundException | EntityValidationException e) {
+		} catch (EntityNotFoundException | EntityValidationException e) {
 			fail("Should not get here");
 		}
 	}
@@ -124,7 +124,7 @@ public class CarResourceTest {
 			doNothing().when(this.carService).deleteCar(carId);
 			Response response = this.carResource.deleteCar(carId);
 			assertEquals(Status.NO_CONTENT.getStatusCode(), response.getStatus());
-		} catch (CarNotFoundException e) {
+		} catch (EntityNotFoundException e) {
 			fail("Should not get here");
 		}
 	}
@@ -146,20 +146,20 @@ public class CarResourceTest {
 	}
 
 	@Test
-	public void whenGettingAnUnexistingCar_ShouldReturnStatusNotFound() throws CarNotFoundException {
+	public void whenGettingAnUnexistingCar_ShouldReturnStatusNotFound() throws EntityNotFoundException {
 		UUID id = UUID.fromString("e72fd0a4-f7a5-42d4-908e-7bc1dc62f000");
-		doThrow(CarNotFoundException.class).when(this.carService).getCar(id);
+		doThrow(EntityNotFoundException.class).when(this.carService).getCar(id);
 		Response response = this.carResource.getCarById(id);
 		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
 	}
 
 	@Test
-	public void whenUpdatingACarWithAnInvalidID_ShouldReturnStatusNotFound() throws CarNotFoundException {
+	public void whenUpdatingACarWithAnInvalidID_ShouldReturnStatusNotFound() throws EntityNotFoundException {
 		try {
 			UUID id = UUID.fromString("e72fd0a4-f7a5-42d4-908e-7bc1dc62f000");
 			Response response = null;
 			when(this.carService.getCar(id)).thenReturn(car);
-			doThrow(CarNotFoundException.class).when(this.carService).updateCar(car);
+			doThrow(EntityNotFoundException.class).when(this.carService).updateCar(car);
 			response = this.carResource.updateCar(id, car);
 			assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
 		} catch (EntityValidationException e) {
@@ -177,15 +177,15 @@ public class CarResourceTest {
 			doThrow(EntityValidationException.class).when(this.carService).updateCar(car);
 			response = this.carResource.updateCar(carId, car);
 			assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-		} catch (CarNotFoundException e) {
+		} catch (EntityNotFoundException e) {
 			fail("Should not get here");
 		}
 	}
 
 	@Test
-	public void whenDeletingACarWithAnInValidID_ShouldReturnStatusNotFound() throws CarNotFoundException {
+	public void whenDeletingACarWithAnInValidID_ShouldReturnStatusNotFound() throws EntityNotFoundException {
 		UUID id = UUID.fromString("e72fd0a4-f7a5-42d4-908e-7bc1dc62f000");
-		doThrow(CarNotFoundException.class).when(this.carService).deleteCar(id);
+		doThrow(EntityNotFoundException.class).when(this.carService).deleteCar(id);
 		Response response = this.carResource.deleteCar(id);
 		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
 	}

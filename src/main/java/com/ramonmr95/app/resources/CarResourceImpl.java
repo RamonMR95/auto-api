@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response.Status;
 
 import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.services.CarService;
-import com.ramonmr95.app.utils.CarNotFoundException;
+import com.ramonmr95.app.utils.EntityNotFoundException;
 import com.ramonmr95.app.utils.EntityValidationException;
 import com.ramonmr95.app.utils.LoggingInterceptor;
 
@@ -28,7 +28,7 @@ import com.ramonmr95.app.utils.LoggingInterceptor;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Interceptors(LoggingInterceptor.class)
-public class CarResource implements ICarResource {
+public class CarResourceImpl implements ICarResource {
 
 	@EJB
 	private CarService carService;
@@ -53,7 +53,7 @@ public class CarResource implements ICarResource {
 					.entity(car)
 					.build();
 		} 
-		catch (CarNotFoundException e) {
+		catch (EntityNotFoundException e) {
 			response = Response.status(Status.NOT_FOUND)
 					.build();
 		}
@@ -102,7 +102,7 @@ public class CarResource implements ICarResource {
 					.entity(this.carService.getCarValidationErrors(car))
 					.build();
 		}
-		catch (CarNotFoundException e) {
+		catch (EntityNotFoundException e) {
 			response = Response.status(Status.NOT_FOUND)
 					.build();
 		} 
@@ -120,7 +120,7 @@ public class CarResource implements ICarResource {
 			response = Response.status(Status.NO_CONTENT)
 					.build();
 		} 
-		catch (CarNotFoundException e) {
+		catch (EntityNotFoundException e) {
 			response = Response.status(Status.NOT_FOUND)
 					.build();
 		}

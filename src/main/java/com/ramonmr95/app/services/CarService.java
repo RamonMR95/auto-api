@@ -19,7 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ramonmr95.app.entities.Car;
-import com.ramonmr95.app.utils.CarNotFoundException;
+import com.ramonmr95.app.utils.EntityNotFoundException;
 import com.ramonmr95.app.utils.EntityValidationException;
 import com.ramonmr95.app.utils.LoggingInterceptor;
 
@@ -36,13 +36,13 @@ public class CarService {
 		return this.persistenceService.getEntitiesWithNamedQuery("Car.findAll", Car.class);
 	}
 
-	public Car getCar(UUID id) throws CarNotFoundException {
+	public Car getCar(UUID id) throws EntityNotFoundException {
 		Car car = this.persistenceService.getEntityByID(Car.class, id);
 		if (car != null) {
 			return car;
 		}
 		log.error("Cannot find a car with id: " + id);
-		throw new CarNotFoundException();
+		throw new EntityNotFoundException();
 	}
 
 	public void createCar(Car car) throws EntityValidationException {
@@ -55,7 +55,7 @@ public class CarService {
 		}
 	}
 
-	public void updateCar(Car car) throws CarNotFoundException, EntityValidationException {
+	public void updateCar(Car car) throws EntityNotFoundException, EntityValidationException {
 		getCar(car.getId());
 		if (isCarValid(car)) {
 			this.persistenceService.mergeEntity(car);
@@ -66,7 +66,7 @@ public class CarService {
 		}
 	}
 
-	public void deleteCar(UUID id) throws CarNotFoundException {
+	public void deleteCar(UUID id) throws EntityNotFoundException {
 		Car car = this.getCar(id);
 		this.persistenceService.deleteEntity(car);
 	}
