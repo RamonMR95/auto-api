@@ -131,24 +131,28 @@ public class CarResourceTest {
 
 	// Invalid values
 	@Test
-	public void whenCreatingACarWithInvalidValues_ShouldReturnStatusBadRequest() throws EntityValidationException {
-		Response response = null;
-		Car carErrors = new Car();
-		carErrors.setId(carId);
-		carErrors.setBrand("Renault");
-		carErrors.setCountry(null);
-		carErrors.setCreated_at(new Timestamp(new Date().getTime()));
-		carErrors.setRegistration(new Timestamp(new Date().getTime()));
-		carErrors.setUpdated_at(new Timestamp(new Date().getTime()));
-		doThrow(EntityValidationException.class).when(this.carService).createCar(carErrors);
-		response = this.carResource.createCar(carErrors);
-		assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+	public void whenCreatingACarWithInvalidValues_ShouldReturnStatusBadRequest() {
+		try {
+			Response response = null;
+			Car carErrors = new Car();
+			carErrors.setId(carId);
+			carErrors.setBrand("Renault");
+			carErrors.setCountry(null);
+			carErrors.setCreated_at(new Timestamp(new Date().getTime()));
+			carErrors.setRegistration(new Timestamp(new Date().getTime()));
+			carErrors.setUpdated_at(new Timestamp(new Date().getTime()));
+			doThrow(EntityValidationException.class).when(this.carService).createCar(carErrors);
+			response = this.carResource.createCar(carErrors);
+			assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+		} catch (EntityValidationException e) {
+			assertEquals("{\"errors\":[\"The country is required\"]}", e.getMessage());
+		}
 	}
 
 	@Test
 	public void whenGettingAnUnexistingCar_ShouldReturnStatusNotFound() throws EntityNotFoundException {
 		UUID id = UUID.fromString("e72fd0a4-f7a5-42d4-908e-7bc1dc62f000");
-		doThrow(EntityNotFoundException.class).when(this.carService).getCar(id);
+		when(this.carService.getCar(id)).thenThrow(EntityNotFoundException.class);
 		Response response = this.carResource.getCarById(id);
 		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
 	}
@@ -168,8 +172,7 @@ public class CarResourceTest {
 	}
 
 	@Test
-	public void whenUpdatingACarWithAValidIDAndEntityValidationErrors_ShouldReturnBadRequest()
-			throws EntityValidationException {
+	public void whenUpdatingACarWithAValidIDAndEntityValidationErrors_ShouldReturnBadRequest() {
 		try {
 			Response response = null;
 			when(this.carService.getCar(carId)).thenReturn(car);
@@ -177,6 +180,8 @@ public class CarResourceTest {
 			doThrow(EntityValidationException.class).when(this.carService).updateCar(car);
 			response = this.carResource.updateCar(carId, car);
 			assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+		} catch (EntityValidationException e) {
+			assertEquals("{\"errors\":[\"The brand is required\"]}", e.getMessage());
 		} catch (EntityNotFoundException e) {
 			fail("Should not get here");
 		}

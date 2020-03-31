@@ -131,23 +131,20 @@ public class CarServiceTest {
 			this.carService.createCar(carErrors);
 			fail("Should not get here");
 		} catch (EntityValidationException e) {
-			
+			assertEquals("{\"errors\":[\"The country is required\"]}", e.getMessage());
 		}
 	}
 
-	@Test
-	public void whenGettingAnUnexistingCar_ShouldThrowCarNotFoundException() {
-		try {
-			UUID id = UUID.fromString("e72fd0a4-f7a5-42d4-908e-7bc1dc62f000");
-			when(this.persistenceService.getEntityByID(Car.class, id)).thenReturn(null);
-			this.carService.getCar(id);
-			fail("Should not get here");
-		} catch (EntityNotFoundException e) {
-		}
+	@Test(expected = EntityNotFoundException.class)
+	public void whenGettingAnUnexistingCar_ShouldThrowCarNotFoundException() throws EntityNotFoundException {
+		UUID id = UUID.fromString("e72fd0a4-f7a5-42d4-908e-7bc1dc62f000");
+		when(this.persistenceService.getEntityByID(Car.class, id)).thenReturn(null);
+		this.carService.getCar(id);
+		fail("Should not get here");
 	}
 
-	@Test
-	public void whenUpdatingACarWithAnInvalidID_ShouldThrowCarNotFoundException() {
+	@Test(expected = EntityNotFoundException.class)
+	public void whenUpdatingACarWithAnInvalidID_ShouldThrowCarNotFoundException() throws EntityNotFoundException {
 		try {
 			UUID id = UUID.fromString("e72fd0a4-f7a5-42d4-908e-7bc1dc62f000");
 			when(this.persistenceService.getEntityByID(Car.class, id)).thenReturn(null);
@@ -158,34 +155,29 @@ public class CarServiceTest {
 			fail("Should not get here");
 		} catch (EntityValidationException e) {
 			fail("Should not get here");
-		} catch (EntityNotFoundException e) {
 		}
 	}
 
 	@Test
-	public void whenUpdatingACarWithAValidIDAndEntityValidationErrors_ShouldThrowEntityValidationException()
-			throws EntityNotFoundException {
+	public void whenUpdatingACarWithAValidIDAndEntityValidationErrors_ShouldThrowEntityValidationException() {
 		try {
 			when(this.persistenceService.getEntityByID(Car.class, carId)).thenReturn(car);
 			car.setBrand(null);
 			this.carService.updateCar(car);
 			fail("Should not get here");
-		} catch (EntityValidationException e) {
-			
 		} catch (EntityNotFoundException e) {
 			fail("Should not get here");
+		} catch (EntityValidationException e) {
+			assertEquals("{\"errors\":[\"The brand is required\"]}", e.getMessage());
 		}
 	}
 
-	@Test
-	public void whenDeletingACarWithAnInValidID_ShouldThrowCarNotFoundException() {
-		try {
-			UUID id = UUID.fromString("e72fd0a4-f7a5-42d4-908e-7bc1dc62f000");
-			when(this.persistenceService.getEntityByID(Car.class, id)).thenReturn(null);
-			this.carService.deleteCar(id);
-			fail("Should not get here");
-		} catch (EntityNotFoundException e) {
-		}
+	@Test(expected = EntityNotFoundException.class)
+	public void whenDeletingACarWithAnInValidID_ShouldThrowCarNotFoundException() throws EntityNotFoundException {
+		UUID id = UUID.fromString("e72fd0a4-f7a5-42d4-908e-7bc1dc62f000");
+		when(this.persistenceService.getEntityByID(Car.class, id)).thenReturn(null);
+		this.carService.deleteCar(id);
+		fail("Should not get here");
 	}
 
 }
