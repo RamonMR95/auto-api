@@ -1,6 +1,5 @@
 package com.ramonmr95.app.resources;
 
-import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.core.Response;
@@ -26,7 +25,7 @@ public interface ICarResource {
 							schema = @Schema(implementation = Car.class)))
 			}
 	)
-	public List<Car> getAllCars();
+	public Response getAllCars();
 	
 	
 	@Operation(summary = "Get car by id",
