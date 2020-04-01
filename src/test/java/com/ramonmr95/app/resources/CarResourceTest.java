@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.any;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -23,8 +24,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import com.ramonmr95.app.dtos.CarDto;
 import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.exceptions.EntityNotFoundException;
 import com.ramonmr95.app.exceptions.EntityValidationException;
@@ -43,6 +46,8 @@ public class CarResourceTest {
 
 	private UUID carId = UUID.fromString("e72fd0a4-f7a5-42d4-908e-7bc1dc62f857");
 
+	private CarDto carDto;
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 
@@ -55,13 +60,14 @@ public class CarResourceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		car = new Car();
-		car.setId(carId);
-		car.setBrand("Renault");
-		car.setCountry("France");
-		car.setCreated_at(new Timestamp(new Date().getTime()));
-		car.setRegistration(new Timestamp(new Date().getTime()));
-		car.setUpdated_at(new Timestamp(new Date().getTime()));
+		this.car = new Car();
+		this.car.setId(carId);
+		this.car.setBrand("Renault");
+		this.car.setCountry("France");
+		this.car.setCreated_at(new Timestamp(new Date().getTime()));
+		this.car.setRegistration(new Timestamp(new Date().getTime()));
+		this.car.setUpdated_at(new Timestamp(new Date().getTime()));
+		this.carDto = this.car.getDto();
 	}
 
 	@After
@@ -73,9 +79,9 @@ public class CarResourceTest {
 	@Test
 	public void whenCreatingACarWithValidValues_ShouldReturnStatusCreated() {
 		try {
-			doNothing().when(this.carService).createCar(car);
-			Response responseTest = this.carResource.createCar(car);
-			assertEquals(car, responseTest.getEntity());
+			when(this.carService.createCar(Mockito.any(Car.class))).thenReturn(car);
+			Response responseTest = this.carResource.createCar(car.getDto());
+			assertEquals(carDto.getId(), ((CarDto) responseTest.getEntity()).getId());
 			assertEquals(Status.CREATED.getStatusCode(), responseTest.getStatus());
 		} catch (EntityValidationException e) {
 			fail("Should not get here");
@@ -94,9 +100,9 @@ public class CarResourceTest {
 	@Test
 	public void whenGettingACarWithAValidID_ShouldReturnStatusOk() {
 		try {
-			when(this.carService.getCar(car.getId())).thenReturn(car);
-			Response response = this.carResource.getCarById(car.getId());
-			assertEquals(car, response.getEntity());
+			when(this.carService.getCar(any(UUID.class))).thenReturn(car);
+			Response response = this.carResource.getCarById(car.getDto().getId());
+			assertEquals(carDto.getId(), ((CarDto) (response.getEntity())).getId());
 			assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		} catch (EntityNotFoundException e) {
 			fail("Should not get here");
@@ -109,9 +115,9 @@ public class CarResourceTest {
 			String brand = "Renault";
 			when(this.carService.getCar(car.getId())).thenReturn(car);
 			car.setBrand(brand);
-			doNothing().when(this.carService).updateCar(car);
-			Response response = this.carResource.updateCar(carId, car);
-			assertEquals(car.getBrand(), ((Car) response.getEntity()).getBrand());
+			doNothing().when(this.carService).updateCar(any(Car.class));
+			Response response = this.carResource.updateCar(carId, car.getDto());
+			assertEquals(car.getBrand(), ((CarDto) response.getEntity()).getBrand());
 			assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		} catch (EntityNotFoundException | EntityValidationException e) {
 			fail("Should not get here");
@@ -141,8 +147,8 @@ public class CarResourceTest {
 			carErrors.setCreated_at(new Timestamp(new Date().getTime()));
 			carErrors.setRegistration(new Timestamp(new Date().getTime()));
 			carErrors.setUpdated_at(new Timestamp(new Date().getTime()));
-			doThrow(EntityValidationException.class).when(this.carService).createCar(carErrors);
-			response = this.carResource.createCar(carErrors);
+			doThrow(EntityValidationException.class).when(this.carService).createCar(any(Car.class));
+			response = this.carResource.createCar(carErrors.getDto());
 			assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
 		} catch (EntityValidationException e) {
 			assertEquals("{\"errors\":[\"The country is required\"]}", e.getMessage());
@@ -163,8 +169,8 @@ public class CarResourceTest {
 			UUID id = UUID.fromString("e72fd0a4-f7a5-42d4-908e-7bc1dc62f000");
 			Response response = null;
 			when(this.carService.getCar(id)).thenReturn(car);
-			doThrow(EntityNotFoundException.class).when(this.carService).updateCar(car);
-			response = this.carResource.updateCar(id, car);
+			doThrow(EntityNotFoundException.class).when(this.carService).updateCar(any(Car.class));
+			response = this.carResource.updateCar(id, car.getDto());
 			assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
 		} catch (EntityValidationException e) {
 			fail("Should not get here");
@@ -175,10 +181,10 @@ public class CarResourceTest {
 	public void whenUpdatingACarWithAValidIDAndEntityValidationErrors_ShouldReturnBadRequest() {
 		try {
 			Response response = null;
-			when(this.carService.getCar(carId)).thenReturn(car);
+			when(this.carService.getCar(any(UUID.class))).thenReturn(car);
 			car.setBrand(null);
-			doThrow(EntityValidationException.class).when(this.carService).updateCar(car);
-			response = this.carResource.updateCar(carId, car);
+			doThrow(EntityValidationException.class).when(this.carService).updateCar(any(Car.class));
+			response = this.carResource.updateCar(carId, car.getDto());
 			assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
 		} catch (EntityValidationException e) {
 			assertEquals("{\"errors\":[\"The brand is required\"]}", e.getMessage());
