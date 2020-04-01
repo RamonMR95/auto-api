@@ -1,4 +1,4 @@
-package com.ramonmr95.app.utils;
+package com.ramonmr95.app.interceptors;
 
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;

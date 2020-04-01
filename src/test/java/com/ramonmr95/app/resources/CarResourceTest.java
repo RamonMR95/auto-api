@@ -26,9 +26,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.ramonmr95.app.entities.Car;
+import com.ramonmr95.app.exceptions.EntityNotFoundException;
+import com.ramonmr95.app.exceptions.EntityValidationException;
 import com.ramonmr95.app.services.CarService;
-import com.ramonmr95.app.utils.EntityNotFoundException;
-import com.ramonmr95.app.utils.EntityValidationException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CarResourceTest {

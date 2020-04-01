@@ -1,4 +1,4 @@
-package com.ramonmr95.app.utils;
+package com.ramonmr95.app.exceptions;
 
 public class EntityNotFoundException extends Exception {
 
