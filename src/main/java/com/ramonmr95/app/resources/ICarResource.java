@@ -18,10 +18,10 @@ public interface ICarResource {
 
 	/**
 	 * 
-	 * Gets a list with all of the {@link Car} entities of the database by using
+	 * Gets a list with all of the {@link CarDto} of the database by using
 	 * {@link CarService} getCars method.
 	 * 
-	 * @return response Response that contains the list with all of the cars.
+	 * @return response Response that contains the {@link List&lt;CarDto&gt;} with all of the cars.
 	 */
 	@Operation(summary = "Get all cars", responses = {
 			@ApiResponse(responseCode = "200", description = "Gets all the cars", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CarDto.class))) })
@@ -29,7 +29,7 @@ public interface ICarResource {
 
 	/**
 	 * 
-	 * Gets a {@link Car} given its id.
+	 * Gets a {@link CarDto} given its id.
 	 * 
 	 * @param id Id of the car in {@link UUID} format.
 	 * @return response Response that contains either the car if it exists in the
@@ -42,10 +42,10 @@ public interface ICarResource {
 
 	/**
 	 * 
-	 * Creates a {@link Car} received from the request body.
+	 * Creates a {@link CarDto} received from the request body.
 	 * 
-	 * @param car {@link Car} to create.
-	 * @return response Response that contains either the created {@link Car} and
+	 * @param car {@link CarDto} to create.
+	 * @return response Response that contains either the created {@link CarDto} and
 	 *         status code 201 if there are not any validation errors or the
 	 *         validations errors and status code 400 if there are any validation
 	 *         errors.
@@ -58,10 +58,10 @@ public interface ICarResource {
 
 	/**
 	 * 
-	 * Updates a {@link Car} given its id and the {@link Car} from the request body.
+	 * Updates a {@link CarDto} given its id and the {@link CarDto} from the request body.
 	 * 
 	 * @param id  Id of the car in {@link UUID} format.
-	 * @param car {@link Car} to update.
+	 * @param car {@link CarDto} to update.
 	 * @return response Response that if there are not any {@link Car} validation
 	 *         errors contains the updated {@link Car} and the status code 200. If
 	 *         the {@link Car} contains validation errors the response will contain the
