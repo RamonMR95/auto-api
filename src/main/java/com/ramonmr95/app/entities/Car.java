@@ -18,6 +18,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.modelmapper.ModelMapper;
+
+import com.ramonmr95.app.dtos.CarDto;
 
 /**
  * 
@@ -116,6 +119,11 @@ public class Car implements Serializable {
 
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
+	}
+	
+	public CarDto getDto() {
+		ModelMapper modelMapper = new ModelMapper();
+		return modelMapper.map(this, CarDto.class);
 	}
 
 }
