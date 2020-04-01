@@ -2,6 +2,7 @@ package com.ramonmr95.app.resources;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
 import javax.interceptor.Interceptors;
@@ -18,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.ramonmr95.app.entities.Car;
+import com.ramonmr95.app.dtos.CarDto;
 import com.ramonmr95.app.exceptions.EntityNotFoundException;
 import com.ramonmr95.app.exceptions.EntityValidationException;
 import com.ramonmr95.app.interceptors.LoggingInterceptor;
@@ -43,8 +44,8 @@ public class CarResourceImpl implements ICarResource {
 	@GET
 	@Override
 	public Response getAllCars() {
-		List<Car> list = this.carService.getCars();
-		GenericEntity<List<Car>> entity = new GenericEntity<List<Car>>(list) {
+		List<CarDto> list = this.carService.getCars().stream().map(car -> car.getDto()).collect(Collectors.toList());
+		GenericEntity<List<CarDto>> entity = new GenericEntity<List<CarDto>>(list) {
 		};
 		Response response = Response.ok(entity).build();
 		return response;
@@ -56,8 +57,8 @@ public class CarResourceImpl implements ICarResource {
 	public Response getCarById(@PathParam("id") UUID id) {
 		Response response = null;
 		try {
-			Car car = this.carService.getCar(id);
-			response = Response.status(Status.OK).entity(car).build();
+			CarDto carDto = this.carService.getCar(id).getDto();
+			response = Response.status(Status.OK).entity(carDto).build();
 		} catch (EntityNotFoundException e) {
 			response = Response.status(Status.NOT_FOUND).build();
 		}
@@ -66,12 +67,11 @@ public class CarResourceImpl implements ICarResource {
 
 	@POST
 	@Override
-	public Response createCar(Car car) {
+	public Response createCar(CarDto carDto) {
 		Response response = null;
-
 		try {
-			this.carService.createCar(car);
-			response = Response.status(Status.CREATED).entity(car).build();
+			CarDto createdDto = this.carService.createCar(carDto.convertToEntity()).getDto();
+			response = Response.status(Status.CREATED).entity(createdDto).build();
 		} catch (EntityValidationException e) {
 			response = Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
@@ -81,18 +81,18 @@ public class CarResourceImpl implements ICarResource {
 	@PUT
 	@Path("/{id}")
 	@Override
-	public Response updateCar(@PathParam("id") UUID id, Car car) {
+	public Response updateCar(@PathParam("id") UUID id, CarDto carDto) {
 		Response response = null;
 
 		try {
-			Car newCar = this.carService.getCar(id);
-			newCar.setBrand(car.getBrand());
-			newCar.setCountry(car.getCountry());
-			newCar.setRegistration(car.getRegistration());
+			CarDto newCarDto = this.carService.getCar(id).getDto();
+			newCarDto.setBrand(carDto.getBrand());
+			newCarDto.setCountry(carDto.getCountry());
+			newCarDto.setRegistration(carDto.getRegistration());
 
-			this.carService.updateCar(newCar);
+			this.carService.updateCar(newCarDto.convertToEntity());
 
-			response = Response.status(Status.OK).entity(newCar).build();
+			response = Response.status(Status.OK).entity(newCarDto).build();
 		} catch (EntityValidationException e) {
 			response = Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		} catch (EntityNotFoundException e) {

@@ -76,12 +76,14 @@ public class CarService {
 	 * Creates a car given by the request body.
 	 * 
 	 * @param car {@link Car} to create.
+	 * @return car Created {@link Car}.
 	 * @throws EntityValidationException If the entity {@link Car} contains
 	 *                                   validation errors.
 	 */
-	public void createCar(Car car) throws EntityValidationException {
+	public Car createCar(Car car) throws EntityValidationException {
 		if (isCarValid(car)) {
 			this.persistenceService.persistEntity(car);
+			return car;
 		} else {
 			log.error("The car does not fulfill all of the validations");
 			throw new EntityValidationException(getCarValidationErrorsString(car));
