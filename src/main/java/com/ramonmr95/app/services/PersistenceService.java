@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import com.ramonmr95.app.utils.LoggingInterceptor;
+import com.ramonmr95.app.interceptors.LoggingInterceptor;
 
 @Stateless
 @Interceptors(LoggingInterceptor.class)

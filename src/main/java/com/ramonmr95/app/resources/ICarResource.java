@@ -30,7 +30,7 @@ public interface ICarResource {
 	 * 
 	 * Gets a {@link Car} given its id.
 	 * 
-	 * @param id Id of the car.
+	 * @param id Id of the car in {@link UUID} format.
 	 * @return response Response that contains either the car if it exists in the
 	 *         Database or status code 404 if it does not.
 	 */
@@ -59,7 +59,7 @@ public interface ICarResource {
 	 * 
 	 * Updates a {@link Car} given its id and the {@link Car} from the request body.
 	 * 
-	 * @param id  Id of the car.
+	 * @param id  Id of the car in {@link UUID} format.
 	 * @param car {@link Car} to update.
 	 * @return response Response that if there are not any {@link Car} validation
 	 *         errors contains the updated {@link Car} and the status code 200. If
@@ -78,7 +78,7 @@ public interface ICarResource {
 	 * 
 	 * Deletes a {@link Car} from the database given its id.
 	 * 
-	 * @param id Id of the car.
+	 * @param id Id of the car in {@link UUID} format.
 	 * @return response Response that if the given id matches any {@link Car} of the
 	 *         database will return a status code of 204. If the id does not match
 	 *         any id the status code will be 404.

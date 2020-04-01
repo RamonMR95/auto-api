@@ -12,8 +12,8 @@ import javax.ejb.Startup;
 import javax.interceptor.Interceptors;
 
 import com.ramonmr95.app.entities.Car;
-import com.ramonmr95.app.utils.EntityValidationException;
-import com.ramonmr95.app.utils.LoggingInterceptor;
+import com.ramonmr95.app.exceptions.EntityValidationException;
+import com.ramonmr95.app.interceptors.LoggingInterceptor;
 
 @Startup
 @Singleton

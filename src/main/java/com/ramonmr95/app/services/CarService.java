@@ -21,9 +21,9 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ramonmr95.app.entities.Car;
-import com.ramonmr95.app.utils.EntityNotFoundException;
-import com.ramonmr95.app.utils.EntityValidationException;
-import com.ramonmr95.app.utils.LoggingInterceptor;
+import com.ramonmr95.app.exceptions.EntityNotFoundException;
+import com.ramonmr95.app.exceptions.EntityValidationException;
+import com.ramonmr95.app.interceptors.LoggingInterceptor;
 
 /**
  * 
@@ -56,7 +56,7 @@ public class CarService {
 	 * 
 	 * Gets a car given its id.
 	 * 
-	 * @param id Id of the car.
+	 * @param id Id of the car in {@link UUID} format
 	 * @return car Returns the car if the given id matches any {@link Car} entity of
 	 *         the database.
 	 * @throws EntityNotFoundException If the given id does not match any
@@ -112,7 +112,7 @@ public class CarService {
 	 * 
 	 * Deletes a {@link Car} from the database given its id.
 	 * 
-	 * @param id Id of the car.
+	 * @param id Id of the car in {@link UUID} format.
 	 * @throws EntityNotFoundException If the given id does not match any
 	 *                                 {@link Car} entity of the database.
 	 */
