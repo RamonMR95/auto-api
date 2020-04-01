@@ -25,6 +25,14 @@ import com.ramonmr95.app.utils.EntityNotFoundException;
 import com.ramonmr95.app.utils.EntityValidationException;
 import com.ramonmr95.app.utils.LoggingInterceptor;
 
+/**
+ * 
+ * Service that using {@link PersistenceService} service generates a CRUD to be
+ * used by {@link CarResourceImpl}.
+ * 
+ * @author Ramón Moñino Rubio
+ *
+ */
 @Stateless
 @Interceptors(LoggingInterceptor.class)
 public class CarService {
@@ -34,10 +42,26 @@ public class CarService {
 	@EJB
 	private PersistenceService<Car, UUID> persistenceService;
 
+	/**
+	 * 
+	 * Gets all of the {@link Car} entities by using a namedQuery.
+	 * 
+	 * @return cars List that contains all of the {@link Car} entities.
+	 */
 	public List<Car> getCars() {
 		return this.persistenceService.getEntitiesWithNamedQuery("Car.findAll", Car.class);
 	}
 
+	/**
+	 * 
+	 * Gets a car given its id.
+	 * 
+	 * @param id Id of the car.
+	 * @return car Returns the car if the given id matches any {@link Car} entity of
+	 *         the database.
+	 * @throws EntityNotFoundException If the given id does not match any
+	 *                                 {@link Car} entity of the database.
+	 */
 	public Car getCar(UUID id) throws EntityNotFoundException {
 		Car car = this.persistenceService.getEntityByID(Car.class, id);
 		if (car != null) {
@@ -47,6 +71,14 @@ public class CarService {
 		throw new EntityNotFoundException("Cannot find a car with id: " + id);
 	}
 
+	/**
+	 * 
+	 * Creates a car given by the request body.
+	 * 
+	 * @param car {@link Car} to create.
+	 * @throws EntityValidationException If the entity {@link Car} contains
+	 *                                   validation errors.
+	 */
 	public void createCar(Car car) throws EntityValidationException {
 		if (isCarValid(car)) {
 			this.persistenceService.persistEntity(car);
@@ -56,6 +88,16 @@ public class CarService {
 		}
 	}
 
+	/**
+	 * 
+	 * Updates a {@link Car} given from the request body.
+	 * 
+	 * @param car {@link Car} to update.
+	 * @throws EntityNotFoundException   If the given id does not match any
+	 *                                   {@link Car} entity of the database.
+	 * @throws EntityValidationException If the entity {@link Car} contains
+	 *                                   validation errors.
+	 */
 	public void updateCar(Car car) throws EntityNotFoundException, EntityValidationException {
 		getCar(car.getId());
 		if (isCarValid(car)) {
@@ -66,12 +108,20 @@ public class CarService {
 		}
 	}
 
+	/**
+	 * 
+	 * Deletes a {@link Car} from the database given its id.
+	 * 
+	 * @param id Id of the car.
+	 * @throws EntityNotFoundException If the given id does not match any
+	 *                                 {@link Car} entity of the database.
+	 */
 	public void deleteCar(UUID id) throws EntityNotFoundException {
 		Car car = this.getCar(id);
 		this.persistenceService.deleteEntity(car);
 	}
 
-	public Map<String, Set<String>> getCarValidationErrors(Car car) {
+	private Map<String, Set<String>> getCarValidationErrors(Car car) {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		Validator validator = factory.getValidator();
 		Set<ConstraintViolation<Car>> validationErrors = validator.validate(car);

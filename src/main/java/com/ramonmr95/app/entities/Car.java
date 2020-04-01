@@ -19,9 +19,16 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+/**
+ * 
+ * Pojo Class that represents the Car entity.
+ * 
+ * @author Ramón Moñino Rubio
+ *
+ */
 @Entity
 @Table(name = "cars")
-@NamedQuery(name="Car.findAll", query="SELECT c FROM Car c")
+@NamedQuery(name = "Car.findAll", query = "SELECT c FROM Car c")
 public class Car implements Serializable {
 
 	private static final long serialVersionUID = 1L;

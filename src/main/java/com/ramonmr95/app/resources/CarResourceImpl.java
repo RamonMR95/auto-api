@@ -24,6 +24,13 @@ import com.ramonmr95.app.utils.EntityNotFoundException;
 import com.ramonmr95.app.utils.EntityValidationException;
 import com.ramonmr95.app.utils.LoggingInterceptor;
 
+/**
+ * 
+ * Resource that maps our {@link Car} API endpoints to a method.
+ * 
+ * @author Ramón Moñino Rubio
+ *
+ */
 @Path("/cars")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
