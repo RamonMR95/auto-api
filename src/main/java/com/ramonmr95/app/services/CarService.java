@@ -95,15 +95,22 @@ public class CarService {
 	 * Updates a {@link Car} given from the request body.
 	 * 
 	 * @param car {@link Car} to update.
+	 * @param id {@link UUID} of the car.
+	 * @return car Updated {@link Car}.
 	 * @throws EntityNotFoundException   If the given id does not match any
 	 *                                   {@link Car} entity of the database.
 	 * @throws EntityValidationException If the entity {@link Car} contains
 	 *                                   validation errors.
 	 */
-	public void updateCar(Car car) throws EntityNotFoundException, EntityValidationException {
-		getCar(car.getId());
+	public Car updateCar(Car car, UUID id) throws EntityNotFoundException, EntityValidationException {
+		Car oldCar = getCar(id);
+		
 		if (isCarValid(car)) {
-			this.persistenceService.mergeEntity(car);
+			oldCar.setBrand(car.getBrand());
+			oldCar.setCountry(car.getCountry());
+			oldCar.setRegistration(car.getRegistration());
+			this.persistenceService.mergeEntity(oldCar);
+			return oldCar;
 		} else {
 			log.error("The car does not fulfill all of the validations");
 			throw new EntityValidationException(getCarValidationErrorsString(car));

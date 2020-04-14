@@ -83,16 +83,9 @@ public class CarResourceImpl implements ICarResource {
 	@Override
 	public Response updateCar(@PathParam("id") UUID id, CarDto carDto) {
 		Response response = null;
-
 		try {
-			CarDto newCarDto = this.carService.getCar(id).getDto();
-			newCarDto.setBrand(carDto.getBrand());
-			newCarDto.setCountry(carDto.getCountry());
-			newCarDto.setRegistration(carDto.getRegistration());
-
-			this.carService.updateCar(newCarDto.convertToEntity());
-
-			response = Response.status(Status.OK).entity(newCarDto).build();
+			CarDto updatedcarDto = this.carService.updateCar(carDto.convertToEntity(), id).getDto();
+			response = Response.status(Status.OK).entity(updatedcarDto).build();
 		} catch (EntityValidationException e) {
 			response = Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		} catch (EntityNotFoundException e) {
@@ -106,7 +99,6 @@ public class CarResourceImpl implements ICarResource {
 	@Override
 	public Response deleteCar(@PathParam("id") UUID id) {
 		Response response = null;
-
 		try {
 			this.carService.deleteCar(id);
 			response = Response.status(Status.NO_CONTENT).build();
