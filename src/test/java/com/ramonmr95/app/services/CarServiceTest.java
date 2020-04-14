@@ -98,7 +98,7 @@ public class CarServiceTest {
 			car.setBrand(brand);
 			when(this.persistenceService.getEntityByID(Car.class, carId)).thenReturn(car);
 			doNothing().when(this.persistenceService).mergeEntity(car);
-			this.carService.updateCar(car);
+			this.carService.updateCar(car, carId);
 			assertEquals(car.getBrand(), brand);
 		} catch (EntityNotFoundException | EntityValidationException e) {
 			fail("Should not get here");
@@ -149,9 +149,9 @@ public class CarServiceTest {
 			UUID id = UUID.fromString("e72fd0a4-f7a5-42d4-908e-7bc1dc62f000");
 			when(this.persistenceService.getEntityByID(Car.class, id)).thenReturn(null);
 			when(this.carService.getCar(id)).thenReturn(car);
-			doThrow(EntityNotFoundException.class).when(this.carService).updateCar(car);
+			doThrow(EntityNotFoundException.class).when(this.carService).updateCar(car, id);
 			car.setBrand("X");
-			this.carService.updateCar(car);
+			this.carService.updateCar(car, id);
 			fail("Should not get here");
 		} catch (EntityValidationException e) {
 			fail("Should not get here");
@@ -163,7 +163,7 @@ public class CarServiceTest {
 		try {
 			when(this.persistenceService.getEntityByID(Car.class, carId)).thenReturn(car);
 			car.setBrand(null);
-			this.carService.updateCar(car);
+			this.carService.updateCar(car, carId);
 			fail("Should not get here");
 		} catch (EntityNotFoundException e) {
 			fail("Should not get here");

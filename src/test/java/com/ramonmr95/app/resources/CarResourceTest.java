@@ -113,9 +113,8 @@ public class CarResourceTest {
 	public void whenUpdatingACarWithAValidID_ShouldReturnStatusNoContent() {
 		try {
 			String brand = "Renault";
-			when(this.carService.getCar(car.getId())).thenReturn(car);
 			car.setBrand(brand);
-			doNothing().when(this.carService).updateCar(any(Car.class));
+			when(this.carService.updateCar(any(Car.class), any(UUID.class))).thenReturn(car);
 			Response response = this.carResource.updateCar(carId, car.getDto());
 			assertEquals(car.getBrand(), ((CarDto) response.getEntity()).getBrand());
 			assertEquals(Status.OK.getStatusCode(), response.getStatus());
@@ -168,8 +167,7 @@ public class CarResourceTest {
 		try {
 			UUID id = UUID.fromString("e72fd0a4-f7a5-42d4-908e-7bc1dc62f000");
 			Response response = null;
-			when(this.carService.getCar(id)).thenReturn(car);
-			doThrow(EntityNotFoundException.class).when(this.carService).updateCar(any(Car.class));
+			when(this.carService.updateCar(any(Car.class), any(UUID.class))).thenThrow(EntityNotFoundException.class);
 			response = this.carResource.updateCar(id, car.getDto());
 			assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
 		} catch (EntityValidationException e) {
@@ -181,9 +179,8 @@ public class CarResourceTest {
 	public void whenUpdatingACarWithAValidIDAndEntityValidationErrors_ShouldReturnBadRequest() {
 		try {
 			Response response = null;
-			when(this.carService.getCar(any(UUID.class))).thenReturn(car);
 			car.setBrand(null);
-			doThrow(EntityValidationException.class).when(this.carService).updateCar(any(Car.class));
+			doThrow(EntityValidationException.class).when(this.carService).updateCar(any(Car.class), any(UUID.class));
 			response = this.carResource.updateCar(carId, car.getDto());
 			assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
 		} catch (EntityValidationException e) {
