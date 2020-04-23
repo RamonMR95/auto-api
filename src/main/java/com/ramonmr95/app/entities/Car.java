@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,7 +30,6 @@ import com.ramonmr95.app.dtos.CarDto;
  */
 @Entity
 @Table(name = "cars")
-@NamedQuery(name = "Car.findAll", query = "SELECT c FROM Car c")
 public class Car implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -120,7 +118,7 @@ public class Car implements Serializable {
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
 	}
-	
+
 	public CarDto getDto() {
 		ModelMapper modelMapper = new ModelMapper();
 		return modelMapper.map(this, CarDto.class);

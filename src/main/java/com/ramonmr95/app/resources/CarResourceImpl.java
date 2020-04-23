@@ -1,5 +1,6 @@
 package com.ramonmr95.app.resources;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -8,18 +9,20 @@ import javax.ejb.EJB;
 import javax.interceptor.Interceptors;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.ramonmr95.app.dtos.CarDto;
+import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.exceptions.EntityNotFoundException;
 import com.ramonmr95.app.exceptions.EntityValidationException;
 import com.ramonmr95.app.interceptors.LoggingInterceptor;
@@ -43,11 +46,33 @@ public class CarResourceImpl implements ICarResource {
 
 	@GET
 	@Override
-	public Response getAllCars() {
-		List<CarDto> list = this.carService.getCars().stream().map(car -> car.getDto()).collect(Collectors.toList());
-		GenericEntity<List<CarDto>> entity = new GenericEntity<List<CarDto>>(list) {
-		};
-		Response response = Response.ok(entity).build();
+	public Response getAllCars(@DefaultValue("1") @QueryParam(value = "page") int page,
+			@DefaultValue("5") @QueryParam(value = "size") int size,
+			@DefaultValue("") @QueryParam(value = "filterBy") String filterBy,
+			@QueryParam(value = "orderBy") String orderBy) {
+		Response response = null;
+		if (page < 1 || size < 0) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		List<CarDto> list = this.carService.getCars(page, size, filterBy, orderBy).stream().map(car -> car.getDto())
+				.collect(Collectors.toList());
+
+		int perPage = list.size();
+		int totalCount = this.carService.getCarsCount(filterBy);
+		int pageCount = 1;
+		if (perPage < totalCount && perPage > 0) {
+			pageCount = (totalCount / perPage) + 1;
+		}
+		if (page > pageCount) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		LinkedHashMap<String, Object> carsMap = new LinkedHashMap<String, Object>();
+		carsMap.put("page", page);
+		carsMap.put("per_page", perPage);
+		carsMap.put("page_count", pageCount);
+		carsMap.put("total_count", totalCount);
+		carsMap.put("cars", list);
+		response = Response.ok(carsMap).build();
 		return response;
 	}
 

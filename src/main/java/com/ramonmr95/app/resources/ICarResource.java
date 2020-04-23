@@ -19,13 +19,18 @@ public interface ICarResource {
 	/**
 	 * 
 	 * Gets a list with all of the {@link CarDto} of the database by using
-	 * {@link CarService} getCars method.
+	 * {@link CarService} getCars method with pagination.
 	 * 
-	 * @return response Response that contains the {@link List&lt;CarDto&gt;} with all of the cars.
+	 * @param page     page number of the pagination. (DEF=0)
+	 * @param size     number of cars.
+	 * @param filterBy {@link CarDto} Field to be filtered by.
+	 * @param orderBy  {@link CarDto} Field to be ordered by.
+	 * @return response Response that contains the {@link List&lt;CarDto&gt;} with
+	 *         all of the cars.
 	 */
 	@Operation(summary = "Get all cars", responses = {
 			@ApiResponse(responseCode = "200", description = "Gets all the cars", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CarDto.class))) })
-	public Response getAllCars();
+	public Response getAllCars(int page, int size, String filterBy, String orderBy);
 
 	/**
 	 * 
@@ -58,15 +63,16 @@ public interface ICarResource {
 
 	/**
 	 * 
-	 * Updates a {@link CarDto} given its id and the {@link CarDto} from the request body.
+	 * Updates a {@link CarDto} given its id and the {@link CarDto} from the request
+	 * body.
 	 * 
 	 * @param id  Id of the car in {@link UUID} format.
 	 * @param car {@link CarDto} to update.
 	 * @return response Response that if there are not any {@link Car} validation
 	 *         errors contains the updated {@link Car} and the status code 200. If
-	 *         the {@link Car} contains validation errors the response will contain the
-	 *         status code 400. If the given id does not match any {@link Car} from
-	 *         the Database, the response will contain the status code 404.
+	 *         the {@link Car} contains validation errors the response will contain
+	 *         the status code 400. If the given id does not match any {@link Car}
+	 *         from the Database, the response will contain the status code 404.
 	 */
 	@Operation(summary = "Update a car", responses = {
 			@ApiResponse(responseCode = "200", description = "Car updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CarDto.class))),
