@@ -2,15 +2,14 @@ package com.ramonmr95.app.resources;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.core.Response;
@@ -90,10 +89,9 @@ public class CarResourceTest {
 
 	@Test
 	public void whenGettingAllOfTheCars_ShouldReturnStatusOk() {
-		when(this.carService.getCars()).thenReturn(new ArrayList<Car>());
-		List<Car> expectedCars = new ArrayList<Car>();
-		Response responseTest = this.carResource.getAllCars();
-		assertEquals(expectedCars, responseTest.getEntity());
+		when(this.carService.getCars(any(Integer.class), any(Integer.class), any(String.class), any(String.class)))
+				.thenReturn(new ArrayList<Car>());
+		Response responseTest = this.carResource.getAllCars(1, 1, "brand", "");
 		assertEquals(Status.OK.getStatusCode(), responseTest.getStatus());
 	}
 

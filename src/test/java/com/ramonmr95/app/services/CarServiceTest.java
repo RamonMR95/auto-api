@@ -5,12 +5,15 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import javax.persistence.TypedQuery;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -35,6 +38,9 @@ public class CarServiceTest {
 
 	@Mock
 	private PersistenceService<Car, UUID> persistenceService;
+
+	@Mock
+	private TypedQuery<Car> query;
 
 	private Car car;
 
@@ -73,10 +79,10 @@ public class CarServiceTest {
 
 	@Test
 	public void whenGettingAllOfTheCars_ShouldReturnListOfCars() {
-		when(this.persistenceService.getEntitiesWithNamedQuery("Car.findAll", Car.class))
-				.thenReturn(new ArrayList<Car>());
+		when(this.persistenceService.getEntitiesQuery(Mockito.eq(Car.class), Mockito.anyMap(), any(String.class)))
+				.thenReturn(query);
 		List<Car> expectedCars = new ArrayList<Car>();
-		List<Car> cars = this.carService.getCars();
+		List<Car> cars = this.carService.getCars(1, 2, "Mercedes", "brand");
 		assertEquals(expectedCars, cars);
 	}
 
