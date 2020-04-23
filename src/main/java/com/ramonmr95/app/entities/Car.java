@@ -30,7 +30,6 @@ import com.ramonmr95.app.dtos.CarDto;
  */
 @Entity
 @Table(name = "cars")
-//@NamedQuery(name = "Car.findAll", query = "SELECT c FROM Car c where c.brand=:brand")
 public class Car implements Serializable {
 
 	private static final long serialVersionUID = 1L;
