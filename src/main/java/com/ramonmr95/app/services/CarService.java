@@ -10,6 +10,7 @@ import java.util.UUID;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
+import javax.persistence.TypedQuery;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -24,6 +25,7 @@ import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.exceptions.EntityNotFoundException;
 import com.ramonmr95.app.exceptions.EntityValidationException;
 import com.ramonmr95.app.interceptors.LoggingInterceptor;
+import com.ramonmr95.app.resources.CarResourceImpl;
 
 /**
  * 
@@ -42,14 +44,37 @@ public class CarService {
 	@EJB
 	private PersistenceService<Car, UUID> persistenceService;
 
+	private Map<String, String> filterMap = new HashMap<String, String>();
+
 	/**
 	 * 
-	 * Gets all of the {@link Car} entities by using a namedQuery.
+	 * Gets all of the {@link Car} entities by using pagination.
 	 * 
+	 * @param page     page number of the pagination. (DEF=0)
+	 * @param size     number of cars.
+	 * @param filterBy {@link Car} Field to be filtered by.
+	 * @param orderBy  {@link Car} Field to be ordered by.
 	 * @return cars List that contains all of the {@link Car} entities.
 	 */
-	public List<Car> getCars() {
-		return this.persistenceService.getEntitiesWithNamedQuery("Car.findAll", Car.class);
+	public List<Car> getCars(int page, int size, String filterBy, String orderBy) {
+		filterMap.put("brand", filterBy);
+		filterMap.put("registration", filterBy);
+		TypedQuery<Car> query = this.persistenceService.getEntitiesQuery(Car.class, filterMap, orderBy);
+		query.setFirstResult((size * page) - size);
+		query.setMaxResults(size);
+		return query.getResultList();
+	}
+
+	/**
+	 * 
+	 * Gets the number of cars filtered by name and registration.
+	 * 
+	 * @param filterBy {@link Car} Field to be filtered by
+	 * @return List that contains all of the {@link Car} entities filtered by name
+	 *         and registration.
+	 */
+	public int getCarsCount(String filterBy) {
+		return this.persistenceService.getEntitiesQuery(Car.class, filterMap, "").getResultList().size();
 	}
 
 	/**
@@ -95,7 +120,7 @@ public class CarService {
 	 * Updates a {@link Car} given from the request body.
 	 * 
 	 * @param car {@link Car} to update.
-	 * @param id {@link UUID} of the car.
+	 * @param id  {@link UUID} of the car.
 	 * @return car Updated {@link Car}.
 	 * @throws EntityNotFoundException   If the given id does not match any
 	 *                                   {@link Car} entity of the database.
@@ -104,7 +129,7 @@ public class CarService {
 	 */
 	public Car updateCar(Car car, UUID id) throws EntityNotFoundException, EntityValidationException {
 		Car oldCar = getCar(id);
-		
+
 		if (isCarValid(car)) {
 			oldCar.setBrand(car.getBrand());
 			oldCar.setCountry(car.getCountry());
