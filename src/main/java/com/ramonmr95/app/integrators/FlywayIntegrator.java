@@ -1,4 +1,4 @@
-package com.ramonmr95.app.services;
+package com.ramonmr95.app.integrators;
 
 import java.sql.Connection;
 import java.sql.SQLException;
