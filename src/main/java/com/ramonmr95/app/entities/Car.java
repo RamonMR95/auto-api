@@ -1,15 +1,19 @@
 package com.ramonmr95.app.entities;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -38,18 +42,30 @@ public class Car implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
+	@ManyToOne(fetch = FetchType.EAGER)
 	@NotNull(message = "The brand is required")
-	@Column(nullable = false)
-	private String brand;
+	private Brand brand;
 
+	@NotNull(message = "The model is required")
+	@Column(nullable = false)
+	private String model;
+
+	@NotNull(message = "The color is required")
+	@Column(nullable = false)
+	private String color;
+
+	@NotNull(message = "The registration date is required")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
-	@NotNull(message = "The registration date is required")
 	private Date registration;
 
+	@ManyToOne(fetch = FetchType.EAGER)
 	@NotNull(message = "The country is required")
-	@Column(nullable = false)
-	private String country;
+	private Country country;
+
+	@NotNull(message = "The car components are required")
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> carComponents = new HashSet<>();
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreationTimestamp
@@ -63,12 +79,12 @@ public class Car implements Serializable {
 
 	}
 
-	public Car(String brand, String country, Date registration) {
+	public Car(Brand brand, String model, String color, Country country, Date registration) {
 		this.brand = brand;
+		this.model = model;
+		this.color = color;
 		this.country = country;
 		this.registration = registration;
-		this.created_at = new Timestamp(new Date().getTime());
-		this.updated_at = new Timestamp(new Date().getTime());
 	}
 
 	public UUID getId() {
@@ -79,12 +95,28 @@ public class Car implements Serializable {
 		this.id = id;
 	}
 
-	public String getBrand() {
+	public Brand getBrand() {
 		return brand;
 	}
 
-	public void setBrand(String brand) {
+	public void setBrand(Brand brand) {
 		this.brand = brand;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 
 	public Date getRegistration() {
@@ -95,12 +127,24 @@ public class Car implements Serializable {
 		this.registration = registration;
 	}
 
-	public String getCountry() {
-		return country;
+	public Country getCountry() {
+		return this.country;
 	}
 
-	public void setCountry(String country) {
+	public void setCountry(Country country) {
 		this.country = country;
+	}
+
+	public Set<String> getCarComponents() {
+		return carComponents;
+	}
+
+	public void setCarComponents(Set<String> carComponents) {
+		this.carComponents = carComponents;
+	}
+
+	public void addComponent(String component) {
+		this.carComponents.add(component);
 	}
 
 	public Date getCreated_at() {

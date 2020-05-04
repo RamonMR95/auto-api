@@ -2,10 +2,12 @@ package com.ramonmr95.app.dtos;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ramonmr95.app.entities.Car;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,9 +25,19 @@ public class CarDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private UUID id;
-	private String brand;
+
+	private BrandDto brand;
+
+	private String model;
+
+	private String color;
+
 	private Date registration;
-	private String country;
+
+	private CountryDto country;
+
+	@JsonProperty("car_components")
+	private Set<String> carComponents;
 
 	public UUID getId() {
 		return id;
@@ -35,12 +47,28 @@ public class CarDto implements Serializable {
 		this.id = id;
 	}
 
-	public String getBrand() {
+	public BrandDto getBrand() {
 		return brand;
 	}
 
-	public void setBrand(String brand) {
-		this.brand = brand;
+	public void setBrand(BrandDto brandDto) {
+		this.brand = brandDto;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 
 	public Date getRegistration() {
@@ -51,12 +79,20 @@ public class CarDto implements Serializable {
 		this.registration = registration;
 	}
 
-	public String getCountry() {
+	public CountryDto getCountry() {
 		return country;
 	}
 
-	public void setCountry(String country) {
-		this.country = country;
+	public void setCountry(CountryDto countryDto) {
+		this.country = countryDto;
+	}
+
+	public Set<String> getCarComponents() {
+		return carComponents;
+	}
+
+	public void setCarComponents(Set<String> carComponents) {
+		this.carComponents = carComponents;
 	}
 
 	public Car convertToEntity() {

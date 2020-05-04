@@ -1,31 +1,34 @@
 package com.ramonmr95.app.services;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.persistence.TypedQuery;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ramonmr95.app.dtos.CarDto;
+import com.ramonmr95.app.entities.Brand;
 import com.ramonmr95.app.entities.Car;
+import com.ramonmr95.app.entities.Country;
+import com.ramonmr95.app.entities.metamodels.Brand_;
+import com.ramonmr95.app.entities.metamodels.Car_;
 import com.ramonmr95.app.exceptions.EntityNotFoundException;
 import com.ramonmr95.app.exceptions.EntityValidationException;
+import com.ramonmr95.app.exceptions.InvalidUUIDFormatException;
 import com.ramonmr95.app.interceptors.LoggingInterceptor;
+import com.ramonmr95.app.parsers.JsonParser;
 import com.ramonmr95.app.resources.CarResourceImpl;
+import com.ramonmr95.app.validators.EntityValidator;
 
 /**
  * 
@@ -44,22 +47,68 @@ public class CarService {
 	@EJB
 	private PersistenceService<Car, UUID> persistenceService;
 
-	private Map<String, String> filterMap = new HashMap<String, String>();
+	@EJB
+	private CountryService countryService;
+
+	@EJB
+	private BrandService brandService;
+
+	private EntityValidator<Car> validator = new EntityValidator<>();
+
+	private JsonParser jsonParser = new JsonParser();
 
 	/**
+	 * Gets all of the {@link Car} filtered and ordered.
 	 * 
-	 * Gets all of the {@link Car} entities by using pagination.
-	 * 
-	 * @param page     page number of the pagination. (DEF=0)
-	 * @param size     number of cars.
 	 * @param filterBy {@link Car} Field to be filtered by.
 	 * @param orderBy  {@link Car} Field to be ordered by.
 	 * @return cars List that contains all of the {@link Car} entities.
 	 */
-	public List<Car> getCars(int page, int size, String filterBy, String orderBy) {
-		filterMap.put("brand", filterBy);
-		filterMap.put("registration", filterBy);
-		TypedQuery<Car> query = this.persistenceService.getEntitiesQuery(Car.class, filterMap, orderBy);
+	public TypedQuery<Car> getCars(String filterBy, String orderBy) {
+		CriteriaBuilder cb = this.persistenceService.getEm().getCriteriaBuilder();
+		CriteriaQuery<Car> cq = cb.createQuery(Car.class);
+		Root<Car> r = cq.from(Car.class);
+		Join<Car, Brand> joinBrand = r.join(Car_.BRAND);
+		cq.select(r);
+
+		if (filterBy != null && !filterBy.isEmpty()) {
+			Predicate brandPredicate = cb.like(cb.lower(joinBrand.get(Brand_.NAME).as(String.class)),
+					String.format("%%%s%%", filterBy.toLowerCase()));
+
+			Predicate carPredicate = cb.like(cb.lower(r.get(Car_.REGISTRATION).as(String.class)),
+					String.format("%%%s%%", filterBy.toLowerCase()));
+			cq.where(cb.or(brandPredicate, carPredicate));
+		}
+
+		if (orderBy != null && !orderBy.isEmpty()) {
+			if (orderBy.charAt(0) == '-') {
+				if (orderBy.substring(1).equalsIgnoreCase("brand")) {
+					cq.orderBy(cb.desc(joinBrand.get(Brand_.NAME)));
+				} else if (orderBy.substring(1).equalsIgnoreCase("registration")) {
+					cq.orderBy(cb.desc(r.get(orderBy.substring(1))));
+				}
+			} else {
+				if (orderBy.equalsIgnoreCase("brand")) {
+					cq.orderBy(cb.asc(joinBrand.get(Brand_.NAME)));
+				} else if (orderBy.equalsIgnoreCase("registration")) {
+					cq.orderBy(cb.asc(r.get(orderBy)));
+				}
+			}
+		}
+		return this.persistenceService.getEm().createQuery(cq);
+	}
+
+	/**
+	 * Gets all of the {@link Car} filtered, ordered and paginated.
+	 * 
+	 * @param page     page number of the pagination. (DEF=1)
+	 * @param size     number of cars
+	 * @param filterBy {@link Car} Field to be filtered by.
+	 * @param orderBy  {@link Car} Field to be ordered by.
+	 * @return cars List that contains all of the {@link Car} entities.
+	 */
+	public List<Car> getCarsPaginated(int page, int size, String filterBy, String orderBy) {
+		TypedQuery<Car> query = this.getCars(filterBy, orderBy);
 		query.setFirstResult((size * page) - size);
 		query.setMaxResults(size);
 		return query.getResultList();
@@ -69,31 +118,34 @@ public class CarService {
 	 * 
 	 * Gets the number of cars filtered by name and registration.
 	 * 
-	 * @param filterBy {@link Car} Field to be filtered by
-	 * @return List that contains all of the {@link Car} entities filtered by name
-	 *         and registration.
+	 * @param filterBy {@link Car} Field to be filtered by.
+	 * @return count Number of cars.
 	 */
-	public int getCarsCount(String filterBy) {
-		return this.persistenceService.getEntitiesQuery(Car.class, filterMap, "").getResultList().size();
+	public Long getFilteredCarsCount(String filterBy) {
+		return (long) this.getCars(filterBy, "").getResultList().size();
 	}
 
 	/**
 	 * 
 	 * Gets a car given its id.
 	 * 
-	 * @param id Id of the car in {@link UUID} format
+	 * @param id Id of the car as string fullfilling the {@link UUID} format.
 	 * @return car Returns the car if the given id matches any {@link Car} entity of
 	 *         the database.
-	 * @throws EntityNotFoundException If the given id does not match any
-	 *                                 {@link Car} entity of the database.
+	 * @throws EntityNotFoundException    If the given id does not match any
+	 *                                    {@link Car} entity of the database.
+	 * @throws InvalidUUIDFormatException If the given id cannot be parsed to UUID
+	 *                                    format.
 	 */
-	public Car getCar(UUID id) throws EntityNotFoundException {
-		Car car = this.persistenceService.getEntityByID(Car.class, id);
+	public Car getCar(String id) throws EntityNotFoundException, InvalidUUIDFormatException {
+		UUID uuid = this.jsonParser.parseUUIDFromString(id);
+		Car car = this.persistenceService.getEntityByID(Car.class, uuid);
 		if (car != null) {
 			return car;
 		}
-		log.error("Cannot find a car with id: " + id);
-		throw new EntityNotFoundException("Cannot find a car with id: " + id);
+		log.error(String.format("Cannot find a car with id: %s", id));
+		String errorMsg = this.jsonParser.getErrorsAsJSONFormatString("Cannot find a car with id: " + id);
+		throw new EntityNotFoundException(errorMsg);
 	}
 
 	/**
@@ -102,16 +154,26 @@ public class CarService {
 	 * 
 	 * @param car {@link Car} to create.
 	 * @return car Created {@link Car}.
-	 * @throws EntityValidationException If the entity {@link Car} contains
-	 *                                   validation errors.
+	 * @throws EntityValidationException  If the entity {@link Car} contains
+	 *                                    validation errors.
+	 * @throws EntityNotFoundException
+	 * @throws InvalidUUIDFormatException If the given id cannot be parsed to UUID
+	 *                                    format.
 	 */
-	public Car createCar(Car car) throws EntityValidationException {
-		if (isCarValid(car)) {
+	public Car createCar(CarDto carDto)
+			throws EntityValidationException, EntityNotFoundException, InvalidUUIDFormatException {
+		Car car = carDto.convertToEntity();
+		Country country = this.countryService.getCountryByName(carDto.getCountry().convertToEntity().getName());
+		Brand brand = this.brandService.getBrandByName(carDto.getBrand().convertToEntity().getName());
+		car.setCountry(country);
+		car.setBrand(brand);
+
+		if (validator.isEntityValid(car)) {
 			this.persistenceService.persistEntity(car);
-			return car;
+			return this.getCar(car.getId().toString());
 		} else {
 			log.error("The car does not fulfill all of the validations");
-			throw new EntityValidationException(getCarValidationErrorsString(car));
+			throw new EntityValidationException(validator.getEntityValidationErrorsString(car));
 		}
 	}
 
@@ -120,25 +182,41 @@ public class CarService {
 	 * Updates a {@link Car} given from the request body.
 	 * 
 	 * @param car {@link Car} to update.
-	 * @param id  {@link UUID} of the car.
+	 * @param id  Id of the car as string fullfilling the {@link UUID} format.
 	 * @return car Updated {@link Car}.
-	 * @throws EntityNotFoundException   If the given id does not match any
-	 *                                   {@link Car} entity of the database.
-	 * @throws EntityValidationException If the entity {@link Car} contains
-	 *                                   validation errors.
+	 * @throws EntityNotFoundException    If the given id does not match any
+	 *                                    {@link Car} entity of the database.
+	 * @throws EntityValidationException  If the entity {@link Car} contains
+	 *                                    validation errors.
+	 * @throws InvalidUUIDFormatException If the given id cannot be parsed to UUID
+	 *                                    format.
 	 */
-	public Car updateCar(Car car, UUID id) throws EntityNotFoundException, EntityValidationException {
-		Car oldCar = getCar(id);
+	public Car updateCar(CarDto carDto, String id)
+			throws EntityNotFoundException, EntityValidationException, InvalidUUIDFormatException {
+		UUID uuid = this.jsonParser.parseUUIDFromString(id);
+		Country country = this.countryService.getCountryByName(carDto.getCountry().convertToEntity().getName());
+		Brand brand = this.brandService.getBrandByName(carDto.getBrand().convertToEntity().getName());
 
-		if (isCarValid(car)) {
-			oldCar.setBrand(car.getBrand());
-			oldCar.setCountry(car.getCountry());
-			oldCar.setRegistration(car.getRegistration());
-			this.persistenceService.mergeEntity(oldCar);
-			return oldCar;
+		Car car = this.persistenceService.getEntityByID(Car.class, uuid);
+
+		if (car == null) {
+			log.error(String.format("Car not found with id: %s", id));
+			throw new EntityNotFoundException(
+					jsonParser.getErrorsAsJSONFormatString(String.format("Car not found with id: %s", id)));
+		}
+
+		if (validator.isEntityValid(carDto.convertToEntity())) {
+			car.setBrand(brand);
+			car.setCountry(country);
+			car.setRegistration(car.getRegistration());
+			car.setColor(car.getColor());
+			car.setModel(car.getModel());
+			car.setCarComponents(car.getCarComponents());
+			this.persistenceService.mergeEntity(car);
+			return car;
 		} else {
 			log.error("The car does not fulfill all of the validations");
-			throw new EntityValidationException(getCarValidationErrorsString(car));
+			throw new EntityValidationException(validator.getEntityValidationErrorsString(carDto.convertToEntity()));
 		}
 	}
 
@@ -146,43 +224,16 @@ public class CarService {
 	 * 
 	 * Deletes a {@link Car} from the database given its id.
 	 * 
-	 * @param id Id of the car in {@link UUID} format.
-	 * @throws EntityNotFoundException If the given id does not match any
-	 *                                 {@link Car} entity of the database.
+	 * @param id Id of the car as string fullfilling the {@link UUID} format.
+	 * @throws EntityNotFoundException    If the given id does not match any
+	 *                                    {@link Car} entity of the database.
+	 * @throws InvalidUUIDFormatException If the given id cannot be parsed to UUID
+	 *                                    format.
 	 */
-	public void deleteCar(UUID id) throws EntityNotFoundException {
+	public void deleteCar(String id) throws EntityNotFoundException, InvalidUUIDFormatException {
+		this.jsonParser.parseUUIDFromString(id);
 		Car car = this.getCar(id);
 		this.persistenceService.deleteEntity(car);
-	}
-
-	private Map<String, Set<String>> getCarValidationErrors(Car car) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		Validator validator = factory.getValidator();
-		Set<ConstraintViolation<Car>> validationErrors = validator.validate(car);
-		Set<String> errorsSet = new HashSet<String>();
-
-		for (ConstraintViolation<Car> constraintViolation : validationErrors) {
-			errorsSet.add(constraintViolation.getMessage());
-		}
-
-		Map<String, Set<String>> errors = new HashMap<String, Set<String>>();
-		errors.put("errors", errorsSet);
-		return errors;
-	}
-
-	private String getCarValidationErrorsString(Car car) {
-		ObjectMapper mapper = new ObjectMapper();
-		String errs = null;
-		try {
-			errs = mapper.writeValueAsString(getCarValidationErrors(car));
-		} catch (JsonProcessingException e) {
-			errs = "Validation errors";
-		}
-		return errs;
-	}
-
-	private boolean isCarValid(Car car) {
-		return this.getCarValidationErrors(car).get("errors").isEmpty();
 	}
 
 }

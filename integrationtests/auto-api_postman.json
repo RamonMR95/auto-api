@@ -1,0 +1,1766 @@
+{
+	"info": {
+		"_postman_id": "d78397cd-7411-42a5-96bd-6cbb62480ed2",
+		"name": "Backend auto",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "cars",
+			"item": [
+				{
+					"name": "Cars create car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e0150825-50d3-4b5c-8335-03e0559ae0a4",
+								"exec": [
+									"// Checking response code with validation errors.",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"",
+									"// Setting up cardId global variable.",
+									"var jsonData = pm.response.json();",
+									"pm.globals.set(\"carId\", jsonData.id);",
+									"",
+									"",
+									"// Checking all json values.",
+									"pm.test(\"Checking brand\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.brand.name).to.eql(\"BMW\");",
+									"});",
+									"",
+									"pm.test(\"Checking country\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.country.name).to.eql(\"Germany\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"brand\": {\r\n        \"name\": \"BMW\"\r\n    },\r\n    \"model\": \"Serie 3\",\r\n    \"color\": \"black\",\r\n    \"registration\": \"2020-03-24T09:13:26.441+01:00\",\r\n    \"country\": {\r\n        \"name\": \"Germany\",\r\n        \"isoCode\": \"DEU\",\r\n        \"flagUrl\": \"\"\r\n    },\r\n    \"carComponents\": [\r\n        \"Steering wheel\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/cars",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cars 400 create car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "818cc97d-3d1c-4fa4-bec8-c38aab1db2ff",
+								"exec": [
+									"// Checking response code with validation errors.",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"var schema = {",
+									"  \"errors\": [",
+									"        \"The registration date is required\"",
+									"    ]",
+									"};",
+									"",
+									"// Checking errors",
+									"pm.test(\"Checking errors (entire response)\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.eql(schema);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Checking errors\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.errors).to.eql(['The registration date is required']);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"brand\": {\r\n        \"name\": \"BMW\"\r\n    },\r\n    \"model\": \"Serie 3\",\r\n    \"color\": \"black\",\r\n    \"country\": {\r\n        \"name\": \"Germany\",\r\n        \"isoCode\": \"DEU\",\r\n        \"flagUrl\": \"\"\r\n    },\r\n    \"carComponents\": [\r\n        \"Steering wheel\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/cars",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cars get all cars",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "750be54f-e092-4cf4-bdf0-8d3f083e9c18",
+								"exec": [
+									"// Checking response code.",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/cars",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cars 400  get all cars size err",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aacf4f36-9a01-44fb-a599-6300b4c75efb",
+								"exec": [
+									"// Checking response code.",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/cars?size=-1",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"cars"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "-1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cars 400 get all cars page err",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0f6a6df1-f5c6-4b99-9b79-ebfd70bae93b",
+								"exec": [
+									"// Checking response code.",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/cars?page=0",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"cars"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cars get car by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8efe6561-99ef-407e-bf39-1621836ce650",
+								"exec": [
+									"// Checking response code with valid car id",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/cars/{{carId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"cars",
+								"{{carId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cars 404 get car by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "205fe84d-89f6-4498-883d-00e0d4dba17c",
+								"exec": [
+									"// Checking response status with invalid car id",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/cars/7c6033c4-0006-4127-23a3-2221f8278771",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"cars",
+								"7c6033c4-0006-4127-23a3-2221f8278771"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cars 400 get car by UUID format err",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9f12bfd3-a395-4643-8da0-32d21e64fbf1",
+								"exec": [
+									"// Checking response code with with an id that does not fullfill the UUID format.",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/cars/890",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"cars",
+								"890"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cars update car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8cbbefa3-42ca-458d-8252-dc5ee4a4665e",
+								"exec": [
+									"// Checking response code with a valid.",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"// Checking all json values.",
+									"pm.test(\"Checking id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.eql(pm.globals.get(\"carId\"));",
+									"});",
+									"",
+									"pm.test(\"Checking brand\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.brand.name).to.eql(\"BMW\");",
+									"});",
+									"",
+									"pm.test(\"Checking country\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.country.name).to.eql(\"Germany\");",
+									"});",
+									"",
+									"pm.test(\"Checking registration\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.registration).to.eql(\"2020-03-24T09:13:26.441+01:00\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"brand\": {\r\n        \"name\": \"BMW\"\r\n    },\r\n    \"carComponents\": [\r\n        \"Steering wheel\"\r\n    ],\r\n    \"color\": \"black\",\r\n    \"country\": {\r\n        \"flagUrl\": \"\",\r\n        \"isoCode\": \"DEU\",\r\n        \"name\": \"Germany\"\r\n    },\r\n    \"model\": \"Serie 3\",\r\n    \"registration\": \"2020-03-24T09:13:26.441+01:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/cars/{{carId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"cars",
+								"{{carId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cars 400 update car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "160c1d28-8fdd-47a1-9c94-efcad6578ca1",
+								"exec": [
+									"// Checking response code with validation errors.",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"var schema = ",
+									"{",
+									"    \"errors\": [",
+									"        \"The registration date is required\"",
+									"    ]",
+									"};",
+									"",
+									"// Checking errors",
+									"pm.test(\"Checking errors (entire response)\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.eql(schema);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"brand\": {\r\n        \"name\": \"BMW\"\r\n    },\r\n    \"carComponents\": [\r\n        \"Steering wheel\"\r\n    ],\r\n    \"color\": \"black\",\r\n    \"country\": {\r\n        \"flagUrl\": \"\",\r\n        \"isoCode\": \"DEU\",\r\n        \"name\": \"Germany\"\r\n    },\r\n    \"model\": \"Serie 3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/cars/{{carId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"cars",
+								"{{carId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cars 404 update car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "19ac262c-ed99-4a65-97af-6957fcb0acf0",
+								"exec": [
+									"// Checking response status with invalid car id",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"brand\": {\r\n        \"name\": \"BMW\"\r\n    },\r\n    \"carComponents\": [\r\n        \"Steering wheel\"\r\n    ],\r\n    \"color\": \"black\",\r\n    \"country\": {\r\n        \"flagUrl\": \"\",\r\n        \"isoCode\": \"DEU\",\r\n        \"name\": \"Germany\"\r\n    },\r\n    \"model\": \"Serie 3\",\r\n    \"registration\": \"2020-03-24T09:13:26.441+01:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/cars/7c6033c4-0006-4127-23a3-2221f8278222",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"cars",
+								"7c6033c4-0006-4127-23a3-2221f8278222"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cars 400 update car UUID format err",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f94aad26-de74-4c53-8288-8e74b95fbcc2",
+								"exec": [
+									"// Checking response code with with an id that does not fullfill the UUID format.",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"brand\": {\r\n        \"name\": \"BMW\"\r\n    },\r\n    \"carComponents\": [\r\n        \"Steering wheel\"\r\n    ],\r\n    \"color\": \"black\",\r\n    \"country\": {\r\n        \"flagUrl\": \"\",\r\n        \"isoCode\": \"DEU\",\r\n        \"name\": \"Germany\"\r\n    },\r\n    \"model\": \"Serie 3\",\r\n    \"registration\": \"2020-03-24T09:13:26.441+01:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/cars/2131231231",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"cars",
+								"2131231231"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cars delete car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ad376721-7c44-425e-a368-115f2faf81c6",
+								"exec": [
+									"// Checking response code with a valid id.",
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/cars/{{carId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"cars",
+								"{{carId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cars 404 delete car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "26c5bd32-1b0f-4741-9220-e115610305b8",
+								"exec": [
+									"// Checking response code with wrong id.",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/cars/7c6033c4-0006-4127-23a3-2221f8278771",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"cars",
+								"7c6033c4-0006-4127-23a3-2221f8278771"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cars 400 delete car UUID format err",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3a6f4dcc-5390-4009-821c-9f5acdd7f821",
+								"exec": [
+									"// Checking response code with with an id that does not fullfill the UUID format.",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/cars/de658",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"cars",
+								"de658"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cars swagger API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/openapi",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"openapi"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "countries",
+			"item": [
+				{
+					"name": "Countries create country",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b5d7ec6a-01aa-4864-a32e-21e9aef18c08",
+								"exec": [
+									"// Checking response code with validation errors.",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"",
+									"// Setting up cardId global variable.",
+									"var jsonData = pm.response.json();",
+									"pm.globals.set(\"countryId\", jsonData.id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Netherlands\",\n\t\"isoCode\": \"123\",\n\t\"flagUrl\": \"\"\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/countries",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"countries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Countries 400 create country",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0cbe3115-532b-47f9-8cbe-569c327e8f18",
+								"exec": [
+									"// Checking response code with validation errors.",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"var schema = {",
+									"    \"errors\": [",
+									"        \"The flagUrl is required\"",
+									"    ]",
+									"};",
+									"",
+									"// Checking errors",
+									"pm.test(\"Checking errors (entire response)\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.eql(schema);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Checking errors\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.errors).to.eql(['The flagUrl is required']);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Netherlands\",\n\t\"isoCode\": \"NETH\"\n}\n\t",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/countries",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"countries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Countries get all countries",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e27f73d7-00a5-41b4-af1c-903ae05ff93d",
+								"exec": [
+									"// Checking response code.",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/countries",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"countries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Countries get country by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1ae81eb9-50f2-4623-864e-8a08fa00aaf8",
+								"exec": [
+									"// Checking response code with valid car id",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/countries/{{countryId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"countries",
+								"{{countryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Countries 404 get country by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "124fc942-7f29-4995-b74c-e1f770cf97a5",
+								"exec": [
+									"// Checking response status with invalid car id",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/countries/7c6033c4-0006-4127-23a3-2221f8278771",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"countries",
+								"7c6033c4-0006-4127-23a3-2221f8278771"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Countries 400 get country by id UUID format err",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "16aa193e-f3b8-4c86-bb44-253bf1f0f389",
+								"exec": [
+									"// Checking response code with with an id that does not fullfill the UUID format.",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/countries/123123213",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"countries",
+								"123123213"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Countries update country",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bc25c093-2828-4474-8881-589933219d3c",
+								"exec": [
+									"// Checking response code with a valid.",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"// Checking all json values.",
+									"pm.test(\"Checking id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.eql(pm.globals.get(\"countryId\"));",
+									"});",
+									"",
+									"pm.test(\"Checking name\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.name).to.eql(\"Netherlands\");",
+									"});",
+									"",
+									"pm.test(\"Checking isoCode\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isoCode).to.eql(\"NETH\");",
+									"});",
+									"",
+									"pm.test(\"Checking flagUrl\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.flagUrl).to.eql(\"img\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Netherlands\",\n\t\"isoCode\": \"NETH\",\n\t\"flagUrl\": \"img\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/countries/{{countryId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"countries",
+								"{{countryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Countries 400 update country",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8893ec36-736c-408b-a3da-6daeb58a3993",
+								"exec": [
+									"// Checking response code with validation errors.",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"var schema = {",
+									"  \"errors\": [",
+									"        \"The flagUrl is required\"",
+									"    ]",
+									"};",
+									"",
+									"// Checking errors",
+									"pm.test(\"Checking errors (entire response)\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.eql(schema);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Netherlands\",\n\t\"isoCode\": \"NETH\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/countries/{{countryId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"countries",
+								"{{countryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Countries 400 update country UUID format err",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "778e7344-c28a-471e-94b6-4266e7f74771",
+								"exec": [
+									"// Checking response status with invalid car id",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Netherlands\",\n\t\"isoCode\": \"NETH\",\n\t\"flagUrl\": \"img\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/countries/123123",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"countries",
+								"123123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Countries 404 update country Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f8f62b5b-110b-4372-a9f4-0ecd55288449",
+								"exec": [
+									"// Checking response status with invalid car id",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Netherlands\",\n\t\"isoCode\": \"NETH\",\n\t\"flagUrl\": \"img\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/countries/7c6033c4-0006-4127-23a3-2221f8278771",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"countries",
+								"7c6033c4-0006-4127-23a3-2221f8278771"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Countries  delete country",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dc01c2b1-c406-4378-9014-b5bf2f13908c",
+								"exec": [
+									"// Checking response code with a valid id.",
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/countries/{{countryId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"countries",
+								"{{countryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Countries 400 delete country UUID format err",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a3aed746-522a-4a23-b8e1-777d5403b43a",
+								"exec": [
+									"// Checking response code with with an id that does not fullfill the UUID format.",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/countries/12312312",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"countries",
+								"12312312"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Countries 404 delete country",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c22745e7-101c-4b7f-8a6c-b10bb6abada4",
+								"exec": [
+									"// Checking response code with wrong id.",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/countries/7c6033c4-0006-4127-23a3-2221f8278771",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"countries",
+								"7c6033c4-0006-4127-23a3-2221f8278771"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "brands",
+			"item": [
+				{
+					"name": "Brands create brand",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1724d46d-3fb8-48d8-bb93-147bad4fc2c3",
+								"exec": [
+									"// Checking response code with validation errors.",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"",
+									"// Setting up cardId global variable.",
+									"var jsonData = pm.response.json();",
+									"pm.globals.set(\"brandId\", jsonData.id);",
+									"",
+									"",
+									"// Checking all json values.",
+									"pm.test(\"Checking brand name\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.name).to.eql(\"Renault\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Renault\"\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/brands",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"brands"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Brands 400 create brand",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "620a00f2-eca5-449a-8f4a-1e3396dcf8da",
+								"exec": [
+									"// Checking response code with validation errors.",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"var schema = {",
+									"    \"errors\": [",
+									"        \"The name is required\"",
+									"    ]",
+									"};",
+									"",
+									"// Checking errors",
+									"pm.test(\"Checking errors (entire response)\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.eql(schema);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/brands",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"brands"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Brands get all brands",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ecad2e34-6cdc-4f06-8061-feb408c9c540",
+								"exec": [
+									"// Checking response code.",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/brands",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"brands"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Brands get brand by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ef6825f0-0b50-4e0d-a8c7-d7ba13436115",
+								"exec": [
+									"// Checking response code with valid car id",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/brands/{{brandId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"brands",
+								"{{brandId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Brands 404 get brand by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c4c54985-424a-4743-9a6a-7837c3eb774a",
+								"exec": [
+									"// Checking response status with invalid car id",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/brands/7c6033c4-0006-4127-23a3-2221f8278771",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"brands",
+								"7c6033c4-0006-4127-23a3-2221f8278771"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Brands update brand",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "90ab899f-efba-4be6-b988-9c86c1e63ab6",
+								"exec": [
+									"// Checking response code with a valid.",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"// Checking all json values.",
+									"pm.test(\"Checking id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.eql(pm.globals.get(\"brandId\"));",
+									"});",
+									"",
+									"pm.test(\"Checking name\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.name).to.eql(\"tluaneR\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"tluaneR\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/brands/{{brandId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"brands",
+								"{{brandId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Brands 400 update brand",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "493a3527-6a6e-4f77-bf31-ba6f2278e631",
+								"exec": [
+									"// Checking response code with validation errors.",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"var schema = {",
+									"  \"errors\": [",
+									"        \"The name is required\"",
+									"    ]",
+									"};",
+									"",
+									"// Checking errors",
+									"pm.test(\"Checking errors (entire response)\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.eql(schema);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/brands/{{brandId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"brands",
+								"{{brandId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Brands 404 update brand",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5b26ab15-a2c8-4015-9765-8dfdaf4ec678",
+								"exec": [
+									"// Checking response status with invalid car id",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"tluaneR\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiHost}}/auto/brands/7c6033c4-0006-4127-23a3-2221f8278771",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"brands",
+								"7c6033c4-0006-4127-23a3-2221f8278771"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Brands delete brand",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0b14dc90-a131-40a7-97da-f53d60c6c954",
+								"exec": [
+									"// Checking response code with a valid id.",
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/brands/{{brandId}}",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"brands",
+								"{{brandId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Brands 400 brand UUID format err",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c656d123-873a-4954-b897-3169bf70f588",
+								"exec": [
+									"// Checking response code with with an id that does not fullfill the UUID format.",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/brands/12312s",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"brands",
+								"12312s"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Brands 404 delete brand",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bbda0f0e-84cb-4cbb-ba9e-af67ce95458c",
+								"exec": [
+									"// Checking response code with wrong id.",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiHost}}/auto/brands/7c6033c4-0006-4127-23a3-2221f8278771",
+							"host": [
+								"{{apiHost}}"
+							],
+							"path": [
+								"auto",
+								"brands",
+								"7c6033c4-0006-4127-23a3-2221f8278771"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "3c0b6d39-5b0b-4f77-86ee-c5522cf44d4a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "5b48090b-0932-4173-9a75-a286c385731b",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "56bdb935-10fc-477c-ab11-65a2087045a2",
+			"key": "apiHost",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
