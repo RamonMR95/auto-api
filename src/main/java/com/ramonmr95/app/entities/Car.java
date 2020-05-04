@@ -13,7 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -42,7 +42,7 @@ public class Car implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@NotNull(message = "The brand is required")
 	private Brand brand;
 
@@ -59,7 +59,7 @@ public class Car implements Serializable {
 	@Column(nullable = false)
 	private Date registration;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@NotNull(message = "The country is required")
 	private Country country;
 
@@ -165,7 +165,7 @@ public class Car implements Serializable {
 
 	public CarDto getDto() {
 		ModelMapper modelMapper = new ModelMapper();
-		
+
 		return modelMapper.map(this, CarDto.class);
 	}
 
