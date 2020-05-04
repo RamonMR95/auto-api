@@ -1,7 +1,6 @@
 package com.ramonmr95.app.entities;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -43,7 +42,7 @@ public class Car implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@NotNull(message = "The brand is required")
 	private Brand brand;
 
@@ -55,18 +54,18 @@ public class Car implements Serializable {
 	@Column(nullable = false)
 	private String color;
 
+	@NotNull(message = "The registration date is required")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
-	@NotNull(message = "The registration date is required")
 	private Date registration;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@NotNull(message = "The country is required")
 	private Country country;
 
 	@NotNull(message = "The car components are required")
-	@ElementCollection
-	private Set<String> carComponents = new HashSet<String>();
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> carComponents = new HashSet<>();
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreationTimestamp
@@ -86,8 +85,6 @@ public class Car implements Serializable {
 		this.color = color;
 		this.country = country;
 		this.registration = registration;
-		this.created_at = new Timestamp(new Date().getTime());
-		this.updated_at = new Timestamp(new Date().getTime());
 	}
 
 	public UUID getId() {
@@ -145,7 +142,7 @@ public class Car implements Serializable {
 	public void setCarComponents(Set<String> carComponents) {
 		this.carComponents = carComponents;
 	}
-	
+
 	public void addComponent(String component) {
 		this.carComponents.add(component);
 	}
@@ -168,6 +165,7 @@ public class Car implements Serializable {
 
 	public CarDto getDto() {
 		ModelMapper modelMapper = new ModelMapper();
+		
 		return modelMapper.map(this, CarDto.class);
 	}
 
