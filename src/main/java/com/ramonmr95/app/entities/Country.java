@@ -16,6 +16,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.modelmapper.ModelMapper;
+
+import com.ramonmr95.app.dtos.CountryDto;
 
 @Entity
 @Table(name = "countries")
@@ -28,11 +31,11 @@ public class Country implements Serializable {
 	private UUID id;
 
 	@NotNull(message = "The name is required")
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String name;
 
 	@NotNull(message = "The isoCode is required")
-	@Column(name = "iso_code", nullable = false)
+	@Column(name = "iso_code", nullable = false, unique = true)
 	private String isoCode;
 
 	@NotNull(message = "The flagUrl is required")
@@ -51,8 +54,10 @@ public class Country implements Serializable {
 
 	}
 
-	public Country(String name) {
+	public Country(String name, String isoCode, String flagUrl) {
 		this.name = name;
+		this.isoCode = isoCode;
+		this.flagUrl = flagUrl;
 	}
 
 	public UUID getId() {
@@ -101,6 +106,11 @@ public class Country implements Serializable {
 
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
+	}
+
+	public CountryDto getDto() {
+		ModelMapper modelMapper = new ModelMapper();
+		return modelMapper.map(this, CountryDto.class);
 	}
 
 }

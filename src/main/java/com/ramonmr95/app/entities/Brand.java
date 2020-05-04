@@ -16,6 +16,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.modelmapper.ModelMapper;
+
+import com.ramonmr95.app.dtos.BrandDto;
 
 @Entity
 @Table(name = "brands")
@@ -28,7 +31,7 @@ public class Brand implements Serializable {
 	private UUID id;
 
 	@NotNull(message = "The name is required")
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String name;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -77,6 +80,11 @@ public class Brand implements Serializable {
 
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
+	}
+	
+	public BrandDto getDto() {
+		ModelMapper modelMapper = new ModelMapper();
+		return modelMapper.map(this, BrandDto.class);
 	}
 
 }
