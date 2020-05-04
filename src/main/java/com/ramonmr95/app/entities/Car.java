@@ -165,7 +165,6 @@ public class Car implements Serializable {
 
 	public CarDto getDto() {
 		ModelMapper modelMapper = new ModelMapper();
-
 		return modelMapper.map(this, CarDto.class);
 	}
 
