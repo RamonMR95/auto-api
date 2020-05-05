@@ -208,10 +208,10 @@ public class CarService {
 		if (validator.isEntityValid(carDto.convertToEntity())) {
 			car.setBrand(brand);
 			car.setCountry(country);
-			car.setRegistration(car.getRegistration());
-			car.setColor(car.getColor());
-			car.setModel(car.getModel());
-			car.setCarComponents(car.getCarComponents());
+			car.setRegistration(carDto.getRegistration());
+			car.setColor(carDto.getColor());
+			car.setModel(carDto.getModel());
+			car.setCarComponents(carDto.getCarComponents());
 			this.persistenceService.mergeEntity(car);
 			return car;
 		} else {
