@@ -1,4 +1,4 @@
-package com.ramonmr95.app.entities.metamodels;
+package com.ramonmr95.app.entities;
 
 import java.util.Date;
 import java.util.UUID;
@@ -7,10 +7,6 @@ import javax.annotation.Generated;
 import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
-
-import com.ramonmr95.app.entities.Brand;
-import com.ramonmr95.app.entities.Car;
-import com.ramonmr95.app.entities.Country;
 
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(Car.class)
