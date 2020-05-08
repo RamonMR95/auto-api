@@ -18,10 +18,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.ramonmr95.app.dtos.CarDto;
 import com.ramonmr95.app.entities.Brand;
+import com.ramonmr95.app.entities.Brand_;
 import com.ramonmr95.app.entities.Car;
+import com.ramonmr95.app.entities.Car_;
 import com.ramonmr95.app.entities.Country;
-import com.ramonmr95.app.entities.metamodels.Brand_;
-import com.ramonmr95.app.entities.metamodels.Car_;
 import com.ramonmr95.app.exceptions.EntityNotFoundException;
 import com.ramonmr95.app.exceptions.EntityValidationException;
 import com.ramonmr95.app.exceptions.InvalidUUIDFormatException;
@@ -68,14 +68,14 @@ public class CarService {
 		CriteriaBuilder cb = this.persistenceService.getEm().getCriteriaBuilder();
 		CriteriaQuery<Car> cq = cb.createQuery(Car.class);
 		Root<Car> r = cq.from(Car.class);
-		Join<Car, Brand> joinBrand = r.join(Car_.BRAND);
+		Join<Car, Brand> joinBrand = r.join(Car_.brand);
 		cq.select(r);
 
 		if (filterBy != null && !filterBy.isEmpty()) {
-			Predicate brandPredicate = cb.like(cb.lower(joinBrand.get(Brand_.NAME).as(String.class)),
+			Predicate brandPredicate = cb.like(cb.lower(joinBrand.get(Brand_.name).as(String.class)),
 					String.format("%%%s%%", filterBy.toLowerCase()));
 
-			Predicate carPredicate = cb.like(cb.lower(r.get(Car_.REGISTRATION).as(String.class)),
+			Predicate carPredicate = cb.like(cb.lower(r.get(Car_.registration).as(String.class)),
 					String.format("%%%s%%", filterBy.toLowerCase()));
 			cq.where(cb.or(brandPredicate, carPredicate));
 		}
@@ -83,13 +83,13 @@ public class CarService {
 		if (orderBy != null && !orderBy.isEmpty()) {
 			if (orderBy.charAt(0) == '-') {
 				if (orderBy.substring(1).equalsIgnoreCase("brand")) {
-					cq.orderBy(cb.desc(joinBrand.get(Brand_.NAME)));
+					cq.orderBy(cb.desc(joinBrand.get(Brand_.name)));
 				} else if (orderBy.substring(1).equalsIgnoreCase("registration")) {
 					cq.orderBy(cb.desc(r.get(orderBy.substring(1))));
 				}
 			} else {
 				if (orderBy.equalsIgnoreCase("brand")) {
-					cq.orderBy(cb.asc(joinBrand.get(Brand_.NAME)));
+					cq.orderBy(cb.asc(joinBrand.get(Brand_.name)));
 				} else if (orderBy.equalsIgnoreCase("registration")) {
 					cq.orderBy(cb.asc(r.get(orderBy)));
 				}
