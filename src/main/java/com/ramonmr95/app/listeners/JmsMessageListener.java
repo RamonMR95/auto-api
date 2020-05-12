@@ -17,6 +17,14 @@ import com.ramonmr95.app.exceptions.EntityValidationException;
 import com.ramonmr95.app.exceptions.InvalidUUIDFormatException;
 import com.ramonmr95.app.services.CarService;
 
+/**
+ * 
+ * Defines the JMS interface used to create, modify and remove cars
+ * asynchronously.
+ * 
+ * @author Ramón Moñino Rubio
+ *
+ */
 @MessageDriven(mappedName = "jms/Queue", activationConfig = {
 		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue") })
 public class JmsMessageListener implements MessageListener {
@@ -30,6 +38,11 @@ public class JmsMessageListener implements MessageListener {
 
 	}
 
+	/**
+	 * 
+	 * Depending on the method name given it will perform the create, update, delete
+	 * operation with car service.
+	 */
 	@Override
 	public void onMessage(Message message) {
 		try {
