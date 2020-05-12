@@ -37,10 +37,10 @@ import com.ramonmr95.app.exceptions.InvalidUUIDFormatException;
 import com.ramonmr95.app.services.CarService;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CarResourceTest {
+public class CarResourceRestTest {
 
 	@InjectMocks
-	private CarResourceImpl carResource;
+	private CarResourceRestImpl carResource;
 
 	@Mock
 	private CarService carService;

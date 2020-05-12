@@ -39,7 +39,7 @@ import com.ramonmr95.app.services.CarService;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Interceptors(LoggingInterceptor.class)
-public class CarResourceImpl implements ICarResource {
+public class CarResourceRestImpl implements ICarResourceRest {
 
 	@EJB
 	private CarService carService;

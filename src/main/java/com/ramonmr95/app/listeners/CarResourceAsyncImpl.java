@@ -27,14 +27,14 @@ import com.ramonmr95.app.services.CarService;
  */
 @MessageDriven(mappedName = "jms/Queue", activationConfig = {
 		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue") })
-public class JmsMessageListener implements MessageListener {
+public class CarResourceAsyncImpl implements MessageListener {
 
-	private static Logger log = LogManager.getLogger(JmsMessageListener.class);
+	private static Logger log = LogManager.getLogger(CarResourceAsyncImpl.class);
 
 	@EJB
 	private CarService carService;
 
-	public JmsMessageListener() {
+	public CarResourceAsyncImpl() {
 
 	}
 

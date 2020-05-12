@@ -27,13 +27,13 @@ import com.ramonmr95.app.exceptions.EntityValidationException;
 import com.ramonmr95.app.exceptions.InvalidUUIDFormatException;
 import com.ramonmr95.app.interceptors.LoggingInterceptor;
 import com.ramonmr95.app.parsers.JsonParser;
-import com.ramonmr95.app.resources.CarResourceImpl;
+import com.ramonmr95.app.resources.CarResourceRestImpl;
 import com.ramonmr95.app.validators.EntityValidator;
 
 /**
  * 
  * Service that using {@link PersistenceService} service generates a CRUD to be
- * used by {@link CarResourceImpl}.
+ * used by {@link CarResourceRestImpl}.
  * 
  * @author Ramón Moñino Rubio
  *
