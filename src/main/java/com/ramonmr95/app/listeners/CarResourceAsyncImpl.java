@@ -65,7 +65,7 @@ public class CarResourceAsyncImpl implements MessageListener {
 				break;
 			case "DELETE":
 				if (id != null) {
-					this.carService.deleteCar(id);
+					this.carService.markCarToDelete(id);
 					log.info(String.format("Deleted car with id: %s", id));
 				} else {
 					log.error(String.format("Cannot find any car with id: %s", id));

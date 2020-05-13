@@ -69,7 +69,7 @@ public class CarService {
 		CriteriaQuery<Car> cq = cb.createQuery(Car.class);
 		Root<Car> r = cq.from(Car.class);
 		Join<Car, Brand> joinBrand = r.join(Car_.brand);
-		cq.select(r);
+		cq.select(r).where(cb.isFalse(r.get(Car_.delete)));
 
 		if (filterBy != null && !filterBy.isEmpty()) {
 			Predicate brandPredicate = cb.like(cb.lower(joinBrand.get(Brand_.name).as(String.class)),
@@ -233,7 +233,23 @@ public class CarService {
 	public void deleteCar(String id) throws EntityNotFoundException, InvalidUUIDFormatException {
 		this.jsonParser.parseUUIDFromString(id);
 		Car car = this.getCar(id);
+		car.setDelete(true);
 		this.persistenceService.deleteEntity(car);
+	}
+
+	public void markCarToDelete(String id) throws InvalidUUIDFormatException, EntityNotFoundException {
+		this.jsonParser.parseUUIDFromString(id);
+		Car car = this.getCar(id);
+		car.setDelete(true);
+		this.persistenceService.mergeEntity(car);
+	}
+
+	public List<Car> getCarsWithDeleteFlag() {
+		CriteriaBuilder cb = this.persistenceService.getEm().getCriteriaBuilder();
+		CriteriaQuery<Car> cq = cb.createQuery(Car.class);
+		Root<Car> r = cq.from(Car.class);
+		cq.select(r).where(cb.isTrue(r.get(Car_.delete)));
+		return this.persistenceService.getEm().createQuery(cq).getResultList();
 	}
 
 }

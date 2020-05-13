@@ -127,7 +127,7 @@ public class CarResourceRestImpl implements ICarResourceRest {
 	public Response deleteCar(@PathParam("id") String id) {
 		Response response = null;
 		try {
-			this.carService.deleteCar(id);
+			this.carService.markCarToDelete(id);
 			response = Response.status(Status.NO_CONTENT).build();
 		} catch (EntityNotFoundException e) {
 			response = Response.status(Status.NOT_FOUND).build();
