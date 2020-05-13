@@ -50,7 +50,7 @@ public class CarDeleteScheduler {
 	public void schedule() {
 		this.properties = new Properties();
 		String cronExp = this.getCronExpressionFromPropertiesFile();
-		this.setScheduleExpression(cronExp);
+		this.getScheduleExpressionObject(cronExp);
 		this.setTimer();
 	}
 
@@ -90,11 +90,11 @@ public class CarDeleteScheduler {
 
 	/**
 	 * 
-	 * Sets the schedule expression used by the timer given a cron expression.
+	 * Gets the schedule expression object used by the timer given a cron expression.
 	 * 
 	 * @param cronExp Cron expression as a string
 	 */
-	public void setScheduleExpression(String cronExp) {
+	public void getScheduleExpressionObject(String cronExp) {
 		this.scheduleExpression = new ScheduleExpression();
 		scheduleExpression.second(cronExp.split(" ")[0]);
 		scheduleExpression.minute(cronExp.split(" ")[1]);
