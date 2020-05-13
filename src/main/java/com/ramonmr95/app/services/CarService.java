@@ -233,7 +233,6 @@ public class CarService {
 	public void deleteCar(String id) throws EntityNotFoundException, InvalidUUIDFormatException {
 		this.jsonParser.parseUUIDFromString(id);
 		Car car = this.getCar(id);
-		car.setDelete(true);
 		this.persistenceService.deleteEntity(car);
 	}
 

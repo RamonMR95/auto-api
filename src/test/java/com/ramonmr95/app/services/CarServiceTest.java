@@ -145,6 +145,7 @@ public class CarServiceTest {
 		when(this.persistenceService.getEm().getCriteriaBuilder()).thenReturn(cb);
 		when(cb.createQuery(Car.class)).thenReturn(cq);
 		when(cq.from(Car.class)).thenReturn(r);
+		when(cq.select(r)).thenReturn(cq);
 		when(this.persistenceService.getEm().createQuery(cq)).thenReturn((TypedQuery<Car>) this.query);
 		TypedQuery<Car> expectedQuery = this.carService.getCars("", "");
 		assertEquals(expectedQuery, this.query);
@@ -161,6 +162,7 @@ public class CarServiceTest {
 		when(this.persistenceService.getEm().getCriteriaBuilder()).thenReturn(cb);
 		when(cb.createQuery(Car.class)).thenReturn(cq);
 		when(cq.from(Car.class)).thenReturn(r);
+		when(cq.select(r)).thenReturn(cq);
 		when(this.persistenceService.getEm().createQuery(cq)).thenReturn((TypedQuery<Car>) this.query);
 		List<Car> expectedCars = this.carService.getCarsPaginated(1, 2, "", "");
 		assertNotNull(expectedCars);
