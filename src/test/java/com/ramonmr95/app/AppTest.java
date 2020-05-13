@@ -1,38 +1,20 @@
 package com.ramonmr95.app;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-    }
+import com.ramonmr95.app.resources.BrandResourceTest;
+import com.ramonmr95.app.resources.CarResourceAsyncTest;
+import com.ramonmr95.app.resources.CarResourceRestTest;
+import com.ramonmr95.app.resources.CountryResourceTest;
+import com.ramonmr95.app.services.BrandServiceTest;
+import com.ramonmr95.app.services.CarServiceTest;
+import com.ramonmr95.app.services.CountryServiceTest;
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
+@RunWith(Suite.class)
+@SuiteClasses({ CarResourceRestTest.class, CarResourceAsyncTest.class, CountryResourceTest.class, BrandResourceTest.class, CarServiceTest.class,
+		CountryServiceTest.class, BrandServiceTest.class })
+public class AppTest {
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
-    }
 }

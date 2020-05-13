@@ -12,11 +12,25 @@ import javax.validation.ValidatorFactory;
 
 import com.ramonmr95.app.parsers.JsonParser;
 
+/**
+ * 
+ * Class used to validate if an entity fulfill all of its validation beans.
+ * 
+ * @author Ramón Moñino Rubio.
+ *
+ * @param <T> Class of the entity.
+ */
 public class EntityValidator<T> {
-	
-	private JsonParser jsonParser = new JsonParser();
-	
 
+	private JsonParser jsonParser = new JsonParser();
+
+	/**
+	 * 
+	 * Gets a map with all of the validation errors.
+	 * 
+	 * @param entity Entity to be validated.
+	 * @return map with validation errors.
+	 */
 	public Map<String, Set<String>> getEntityValidationErrors(T entity) {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		Validator validator = factory.getValidator();
@@ -32,10 +46,24 @@ public class EntityValidator<T> {
 		return errors;
 	}
 
+	/**
+	 * 
+	 * Gets all of the validation errors as string.
+	 * 
+	 * @param entity Entity to be validated.
+	 * @return json format string with the errors.
+	 */
 	public String getEntityValidationErrorsString(T entity) {
 		return jsonParser.getMapAsJsonFormat(getEntityValidationErrors(entity));
 	}
 
+	/**
+	 * 
+	 * Checks if an entity contains any validation error.
+	 * 
+	 * @param entity Entity to be validated.
+	 * @return true if contains any error, false if not.
+	 */
 	public boolean isEntityValid(T entity) {
 		return this.getEntityValidationErrors(entity).get("errors").isEmpty();
 	}

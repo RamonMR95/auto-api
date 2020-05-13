@@ -1,13 +1,17 @@
 package com.ramonmr95.app.dtos;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ramonmr95.app.entities.Car;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,6 +27,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class CarDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final Logger log = LogManager.getLogger(CarDto.class);
 
 	private UUID id;
 
@@ -98,6 +104,16 @@ public class CarDto implements Serializable {
 	public Car convertToEntity() {
 		ModelMapper modelMapper = new ModelMapper();
 		return modelMapper.map(this, Car.class);
+	}
+
+	public static CarDto getCarDtoFromJsonString(String jsonString) {
+		CarDto carDto = null;
+		try {
+			carDto = new ObjectMapper().findAndRegisterModules().readValue(jsonString, CarDto.class);
+		} catch (IOException e) {
+			log.error("Cannot parse jsonString to CarDto");
+		}
+		return carDto;
 	}
 
 }

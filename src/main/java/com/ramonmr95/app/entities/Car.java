@@ -75,6 +75,9 @@ public class Car implements Serializable {
 	@UpdateTimestamp
 	private Date updated_at;
 
+	@Column(nullable = false)
+	private boolean delete = false;
+
 	public Car() {
 
 	}
@@ -161,6 +164,14 @@ public class Car implements Serializable {
 
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
+	}
+
+	public boolean isDelete() {
+		return delete;
+	}
+
+	public void setDelete(boolean delete) {
+		this.delete = delete;
 	}
 
 	public CarDto getDto() {

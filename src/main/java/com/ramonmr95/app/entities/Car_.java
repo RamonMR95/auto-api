@@ -21,6 +21,7 @@ public class Car_ {
 	public static volatile SetAttribute<Car, String> carComponents;
 	public static volatile SingularAttribute<Car, Date> created_at;
 	public static volatile SingularAttribute<Car, Date> updated_at;
+	public static volatile SingularAttribute<Car, Boolean> delete;
 
 	public static final String ID = "id";
 	public static final String BRAND = "brand";
@@ -30,4 +31,5 @@ public class Car_ {
 	public static final String CARCOMPONENTS = "carComponents";
 	public static final String CREATED_AT = "created_at";
 	public static final String UPDATED_AT = "updated_at";
+	public static final String DELETE = "delete";
 }

@@ -16,16 +16,28 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 
+/**
+ * 
+ * Filter used to validate if the request contains a valid jwt token in the
+ * headers.
+ * 
+ * @author Ramón Moñino Rubio
+ *
+ */
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class JwtFilter implements ContainerRequestFilter {
 
+	/**
+	 * Validates the request headers. If the jwt token is invalid throws a 401
+	 * response.
+	 */
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		if (requestContext.getMethod().equals("OPTIONS")) {
 			return;
 		}
-		
+
 		String auth = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 		Response response = null;
 
