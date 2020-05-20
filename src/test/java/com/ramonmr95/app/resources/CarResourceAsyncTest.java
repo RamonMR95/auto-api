@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.UUID;
 
 import javax.jms.JMSException;
-import javax.jms.Message;
 
+import org.apache.activemq.command.ActiveMQTextMessage;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -40,7 +40,7 @@ public class CarResourceAsyncTest {
 	private CarService carService;
 
 	@Mock
-	private Message message;
+	private ActiveMQTextMessage amqtm;
 
 	private Car car;
 
@@ -97,10 +97,10 @@ public class CarResourceAsyncTest {
 	public void whenPostMethod_ShouldCreateACar() {
 		try {
 			String json = "{\"brand\":{\"name\":\"BMW22222\"},\"model\":\"Serie 3\",\"color\":\"black\",\"registration\":\"2020-03-24T09:13:26.441+01:00\",\"country\":{\"name\":\"Germany\",\"isoCode\":\"DEU\",\"flagUrl\":\"\"},\"car_components\":[\"Steering wheel\"]}";
-			Mockito.when(this.message.getStringProperty("METHOD")).thenReturn("POST");
-			Mockito.when(this.message.getBody(String.class)).thenReturn(json);
+			Mockito.when(this.amqtm.getStringProperty("METHOD")).thenReturn("POST");
+			Mockito.when(this.amqtm.getText()).thenReturn(json);
 			Mockito.when(this.carService.createCar(Mockito.any(CarDto.class))).thenReturn(this.car);
-			this.carResourceAsyncImpl.onMessage(message);
+			this.carResourceAsyncImpl.onMessage(amqtm);
 			Mockito.verify(this.carService).createCar(Mockito.any(CarDto.class));
 		} catch (JMSException | EntityNotFoundException | EntityValidationException | InvalidUUIDFormatException e) {
 			fail("Should not get here");
@@ -112,12 +112,12 @@ public class CarResourceAsyncTest {
 	public void whenUpdateMethod_ShouldUpdateACar() {
 		try {
 			String json = "{\"brand\":{\"name\":\"BMW22222\"},\"model\":\"Serie 3\",\"color\":\"black\",\"registration\":\"2020-03-24T09:13:26.441+01:00\",\"country\":{\"name\":\"Germany\",\"isoCode\":\"DEU\",\"flagUrl\":\"\"},\"car_components\":[\"Steering wheel\"]}";
-			Mockito.when(this.message.getStringProperty("METHOD")).thenReturn("PUT");
-			Mockito.when(this.message.getStringProperty("id")).thenReturn(this.carId.toString());
-			Mockito.when(this.message.getBody(String.class)).thenReturn(json);
+			Mockito.when(this.amqtm.getStringProperty("METHOD")).thenReturn("PUT");
+			Mockito.when(this.amqtm.getStringProperty("id")).thenReturn(this.carId.toString());
+			Mockito.when(this.amqtm.getText()).thenReturn(json);
 			Mockito.when(this.carService.updateCar(Mockito.any(CarDto.class), Mockito.any(String.class)))
 					.thenReturn(this.car);
-			this.carResourceAsyncImpl.onMessage(message);
+			this.carResourceAsyncImpl.onMessage(amqtm);
 			Mockito.verify(this.carService).updateCar(Mockito.any(CarDto.class), Mockito.any(String.class));
 		} catch (JMSException | EntityValidationException | EntityNotFoundException | InvalidUUIDFormatException e) {
 			fail("Should not get here");
@@ -128,10 +128,10 @@ public class CarResourceAsyncTest {
 	@Test
 	public void whenDeleteMethod_ShouldMarkToDeleteACar() {
 		try {
-			Mockito.when(this.message.getStringProperty("METHOD")).thenReturn("DELETE");
-			Mockito.when(this.message.getStringProperty("id")).thenReturn(this.carId.toString());
+			Mockito.when(this.amqtm.getStringProperty("METHOD")).thenReturn("DELETE");
+			Mockito.when(this.amqtm.getStringProperty("id")).thenReturn(this.carId.toString());
 			Mockito.doNothing().when(this.carService).markCarToDelete(this.carId.toString());
-			this.carResourceAsyncImpl.onMessage(message);
+			this.carResourceAsyncImpl.onMessage(amqtm);
 			Mockito.verify(this.carService).markCarToDelete(this.carId.toString());
 		} catch (JMSException | EntityNotFoundException | InvalidUUIDFormatException e) {
 			fail("Should not get here");
@@ -144,9 +144,9 @@ public class CarResourceAsyncTest {
 	public void whenPostMethodWithANullCar_ShouldNotExecuteCarServiceCreateCarMethod() {
 		try {
 			String json = null;
-			Mockito.when(this.message.getStringProperty("METHOD")).thenReturn("POST");
-			Mockito.when(this.message.getBody(String.class)).thenReturn(json);
-			this.carResourceAsyncImpl.onMessage(message);
+			Mockito.when(this.amqtm.getStringProperty("METHOD")).thenReturn("POST");
+			Mockito.when(this.amqtm.getText()).thenReturn(json);
+			this.carResourceAsyncImpl.onMessage(amqtm);
 			Mockito.verify(this.carService, Mockito.never()).createCar(Mockito.any(CarDto.class));
 		} catch (JMSException | EntityNotFoundException | EntityValidationException | InvalidUUIDFormatException e) {
 			fail("Should not get here");
@@ -157,10 +157,10 @@ public class CarResourceAsyncTest {
 	public void whenUpdateMethodWithAnInvalidId_ShouldNeverExecuteCarServiceUpdateCarMethod() {
 		try {
 			String json = "{\"brand\":{\"name\":\"BMW22222\"},\"model\":\"Serie 3\",\"color\":\"black\",\"registration\":\"2020-03-24T09:13:26.441+01:00\",\"country\":{\"name\":\"Germany\",\"isoCode\":\"DEU\",\"flagUrl\":\"\"},\"car_components\":[\"Steering wheel\"]}";
-			Mockito.when(this.message.getStringProperty("METHOD")).thenReturn("PUT");
-			Mockito.when(this.message.getStringProperty("id")).thenReturn(null);
-			Mockito.when(this.message.getBody(String.class)).thenReturn(json);
-			this.carResourceAsyncImpl.onMessage(message);
+			Mockito.when(this.amqtm.getStringProperty("METHOD")).thenReturn("PUT");
+			Mockito.when(this.amqtm.getStringProperty("id")).thenReturn(null);
+			Mockito.when(this.amqtm.getText()).thenReturn(json);
+			this.carResourceAsyncImpl.onMessage(amqtm);
 			Mockito.verify(this.carService, Mockito.never()).updateCar(Mockito.any(CarDto.class),
 					Mockito.any(String.class));
 		} catch (JMSException | EntityValidationException | EntityNotFoundException | InvalidUUIDFormatException e) {
@@ -172,10 +172,10 @@ public class CarResourceAsyncTest {
 	@Test
 	public void whenUpdateMethodWithANullCar_ShouldNeverExecuteCarServiceUpdateCarMethod() {
 		try {
-			Mockito.when(this.message.getStringProperty("METHOD")).thenReturn("PUT");
-			Mockito.when(this.message.getStringProperty("id")).thenReturn(this.carId.toString());
-			Mockito.when(this.message.getBody(String.class)).thenReturn(null);
-			this.carResourceAsyncImpl.onMessage(message);
+			Mockito.when(this.amqtm.getStringProperty("METHOD")).thenReturn("PUT");
+			Mockito.when(this.amqtm.getStringProperty("id")).thenReturn(this.carId.toString());
+			Mockito.when(this.amqtm.getText()).thenReturn(null);
+			this.carResourceAsyncImpl.onMessage(amqtm);
 			Mockito.verify(this.carService, Mockito.never()).updateCar(Mockito.any(CarDto.class),
 					Mockito.any(String.class));
 		} catch (JMSException | EntityValidationException | EntityNotFoundException | InvalidUUIDFormatException e) {
@@ -187,9 +187,9 @@ public class CarResourceAsyncTest {
 	@Test
 	public void whenDeleteMethodWithAnInvalidId_ShouldNeverExecuteCarServiceMarkCarToDeleteMethod() {
 		try {
-			Mockito.when(this.message.getStringProperty("METHOD")).thenReturn("DELETE");
-			Mockito.when(this.message.getStringProperty("id")).thenReturn(null);
-			this.carResourceAsyncImpl.onMessage(message);
+			Mockito.when(this.amqtm.getStringProperty("METHOD")).thenReturn("DELETE");
+			Mockito.when(this.amqtm.getStringProperty("id")).thenReturn(null);
+			this.carResourceAsyncImpl.onMessage(amqtm);
 			Mockito.verify(this.carService, Mockito.never()).markCarToDelete(this.carId.toString());
 		} catch (JMSException | EntityNotFoundException | InvalidUUIDFormatException e) {
 			fail("Should not get here");

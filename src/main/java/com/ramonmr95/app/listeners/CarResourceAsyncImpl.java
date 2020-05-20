@@ -7,6 +7,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
+import org.apache.activemq.command.ActiveMQTextMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,8 +26,10 @@ import com.ramonmr95.app.services.CarService;
  * @author Ramón Moñino Rubio
  *
  */
-@MessageDriven(mappedName = "jms/Queue", activationConfig = {
-		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue") })
+
+@MessageDriven(activationConfig = { @ActivationConfigProperty(propertyName = "destination", propertyValue = "MyQueue"),
+		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
+		@ActivationConfigProperty(propertyName = "resourceAdapter", propertyValue = "activemq-rar-5.14.5") })
 public class CarResourceAsyncImpl implements MessageListener {
 
 	private static Logger log = LogManager.getLogger(CarResourceAsyncImpl.class);
@@ -46,9 +49,10 @@ public class CarResourceAsyncImpl implements MessageListener {
 	@Override
 	public void onMessage(Message message) {
 		try {
-			String method = message.getStringProperty("METHOD");
-			String id = message.getStringProperty("id");
-			String jsonString = message.getBody(String.class);
+			ActiveMQTextMessage amqtm = (ActiveMQTextMessage) message;
+			String jsonString = amqtm.getText();
+			String method = amqtm.getStringProperty("METHOD");
+			String id = amqtm.getStringProperty("id");
 			CarDto carDto = null;
 			if (jsonString != null) {
 				carDto = CarDto.getCarDtoFromJsonString(jsonString);
