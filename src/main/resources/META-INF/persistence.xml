@@ -6,14 +6,15 @@
  http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 	<persistence-unit name="carPU" transaction-type="JTA">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-		<jta-data-source>jdbc/postgresql</jta-data-source>
+		<jta-data-source>java:global/postgresql</jta-data-source>
+		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		<properties>
 			<property
 				name="javax.persistence.schema-generation.database.action"
 				value="drop-and-create" />
-
+			<property name="hibernate.dialect"
+				value="org.hibernate.dialect.PostgreSQLDialect" />
 			<property name="hibernate.default_schema" value="public" />
-
 			<property name="hibernate.transaction.jta.platform"
 				value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform" />
 		</properties>
