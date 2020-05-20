@@ -27,7 +27,7 @@ import com.ramonmr95.app.services.CarService;
  *
  */
 
-@MessageDriven(activationConfig = { @ActivationConfigProperty(propertyName = "destination", propertyValue = "MyQueue"),
+@MessageDriven(activationConfig = { @ActivationConfigProperty(propertyName = "destination", propertyValue = "CarsQueue"),
 		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
 		@ActivationConfigProperty(propertyName = "resourceAdapter", propertyValue = "activemq-rar-5.14.5") })
 public class CarResourceAsyncImpl implements MessageListener {
