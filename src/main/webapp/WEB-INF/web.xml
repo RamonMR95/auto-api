@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
 	 version="3.1">
     <session-config>
         <session-timeout>
@@ -11,8 +10,8 @@
     <data-source>
      <name>java:global/postgresql</name>
      <class-name>org.postgresql.ds.PGPoolingDataSource</class-name>
-     <server-name>${ENV=HOST_NAME}</server-name>
-     <port-number>5432</port-number>
+     <server-name>${ENV=DB_SERVER_NAME}</server-name>
+     <port-number>${ENV=DB_PORT}</port-number>
      <database-name>${ENV=DB_NAME}</database-name>
      <user>${ENV=DB_USER}</user>
      <password>${ENV=DB_PASSWORD}</password>
