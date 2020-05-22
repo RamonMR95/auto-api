@@ -10,11 +10,11 @@
     <data-source>
      <name>java:global/postgresql</name>
      <class-name>org.postgresql.ds.PGPoolingDataSource</class-name>
-     <server-name>${ENV=DB_SERVER_NAME}</server-name>
-     <port-number>${ENV=DB_PORT}</port-number>
-     <database-name>${ENV=DB_NAME}</database-name>
-     <user>${ENV=DB_USER}</user>
-     <password>${ENV=DB_PASSWORD}</password>
+     <server-name>${DB_SERVER_NAME}</server-name>
+     <port-number>${DB_PORT}</port-number>
+     <database-name>${DB_NAME}</database-name>
+     <user>${DB_USER}</user>
+     <password>${DB_PASSWORD}</password>
      <property>
          <name>fish.payara.slow-query-threshold-in-seconds</name>
          <value>5</value>
