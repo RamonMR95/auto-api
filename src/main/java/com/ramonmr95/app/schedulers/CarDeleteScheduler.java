@@ -1,8 +1,6 @@
 package com.ramonmr95.app.schedulers;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -13,9 +11,11 @@ import javax.ejb.Startup;
 import javax.ejb.Timeout;
 import javax.ejb.TimerConfig;
 import javax.ejb.TimerService;
+import javax.inject.Inject;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import com.ramonmr95.app.entities.Car;
 import com.ramonmr95.app.exceptions.EntityNotFoundException;
@@ -44,13 +44,13 @@ public class CarDeleteScheduler {
 
 	private ScheduleExpression scheduleExpression;
 
-	private Properties properties;
+	@Inject
+	@ConfigProperty(name = "cars.deletion.cron.expression")
+	private String cronExpression;
 
 	@PostConstruct
 	public void schedule() {
-		this.properties = new Properties();
-		String cronExp = this.getCronExpressionFromPropertiesFile();
-		this.getScheduleExpressionObject(cronExp);
+		this.getScheduleExpressionObject(cronExpression);
 		this.setTimer();
 	}
 
@@ -73,24 +73,8 @@ public class CarDeleteScheduler {
 
 	/**
 	 * 
-	 * Gets the cron expression from the properties file.
-	 * 
-	 * @return cronexpression Cron expression as a string.
-	 */
-	public String getCronExpressionFromPropertiesFile() {
-		String exp = null;
-		try {
-			properties
-					.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties"));
-			exp = properties.getProperty("cars.deletion.cron.expression");
-		} catch (IOException e) {
-		}
-		return exp;
-	}
-
-	/**
-	 * 
-	 * Gets the schedule expression object used by the timer given a cron expression.
+	 * Gets the schedule expression object used by the timer given a cron
+	 * expression.
 	 * 
 	 * @param cronExp Cron expression as a string
 	 */

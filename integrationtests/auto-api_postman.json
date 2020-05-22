@@ -18,7 +18,7 @@
 								"exec": [
 									"// Checking response code with validation errors.",
 									"pm.test(\"Successful POST request\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
 									"});",
 									"",
 									"",
@@ -44,6 +44,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -56,12 +66,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/cars",
+							"raw": "{{apiHost}}/cars",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"cars"
 							]
 						}
@@ -105,6 +114,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -117,12 +136,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/cars",
+							"raw": "{{apiHost}}/cars",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"cars"
 							]
 						}
@@ -149,15 +167,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/cars",
+							"raw": "{{apiHost}}/cars",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"cars"
 							]
 						}
@@ -185,15 +212,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/cars?size=-1",
+							"raw": "{{apiHost}}/cars?size=-1",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"cars"
 							],
 							"query": [
@@ -226,15 +262,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/cars?page=0",
+							"raw": "{{apiHost}}/cars?page=0",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"cars"
 							],
 							"query": [
@@ -265,15 +310,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/cars/{{carId}}",
+							"raw": "{{apiHost}}/cars/{{carId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"cars",
 								"{{carId}}"
 							]
@@ -299,15 +353,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/cars/7c6033c4-0006-4127-23a3-2221f8278771",
+							"raw": "{{apiHost}}/cars/7c6033c4-0006-4127-23a3-2221f8278771",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"cars",
 								"7c6033c4-0006-4127-23a3-2221f8278771"
 							]
@@ -333,15 +396,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/cars/890",
+							"raw": "{{apiHost}}/cars/890",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"cars",
 								"890"
 							]
@@ -389,6 +461,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -401,12 +483,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/cars/{{carId}}",
+							"raw": "{{apiHost}}/cars/{{carId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"cars",
 								"{{carId}}"
 							]
@@ -446,6 +527,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -458,12 +549,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/cars/{{carId}}",
+							"raw": "{{apiHost}}/cars/{{carId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"cars",
 								"{{carId}}"
 							]
@@ -489,6 +579,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -501,12 +601,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/cars/7c6033c4-0006-4127-23a3-2221f8278222",
+							"raw": "{{apiHost}}/cars/7c6033c4-0006-4127-23a3-2221f8278222",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"cars",
 								"7c6033c4-0006-4127-23a3-2221f8278222"
 							]
@@ -532,6 +631,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -544,12 +653,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/cars/2131231231",
+							"raw": "{{apiHost}}/cars/2131231231",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"cars",
 								"2131231231"
 							]
@@ -576,15 +684,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/cars/{{carId}}",
+							"raw": "{{apiHost}}/cars/{{carId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"cars",
 								"{{carId}}"
 							]
@@ -612,15 +729,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/cars/7c6033c4-0006-4127-23a3-2221f8278771",
+							"raw": "{{apiHost}}/cars/7c6033c4-0006-4127-23a3-2221f8278771",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"cars",
 								"7c6033c4-0006-4127-23a3-2221f8278771"
 							]
@@ -648,15 +774,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/cars/de658",
+							"raw": "{{apiHost}}/cars/de658",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"cars",
 								"de658"
 							]
@@ -670,12 +805,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/openapi",
+							"raw": "{{apiHost}}/openapi",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"openapi"
 							]
 						}
@@ -712,6 +846,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -724,12 +868,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/countries",
+							"raw": "{{apiHost}}/countries",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"countries"
 							]
 						}
@@ -773,6 +916,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -785,12 +938,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/countries",
+							"raw": "{{apiHost}}/countries",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"countries"
 							]
 						}
@@ -817,15 +969,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/countries",
+							"raw": "{{apiHost}}/countries",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"countries"
 							]
 						}
@@ -850,15 +1011,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/countries/{{countryId}}",
+							"raw": "{{apiHost}}/countries/{{countryId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"countries",
 								"{{countryId}}"
 							]
@@ -884,15 +1054,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/countries/7c6033c4-0006-4127-23a3-2221f8278771",
+							"raw": "{{apiHost}}/countries/7c6033c4-0006-4127-23a3-2221f8278771",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"countries",
 								"7c6033c4-0006-4127-23a3-2221f8278771"
 							]
@@ -918,15 +1097,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/countries/123123213",
+							"raw": "{{apiHost}}/countries/123123213",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"countries",
 								"123123213"
 							]
@@ -974,6 +1162,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -986,12 +1184,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/countries/{{countryId}}",
+							"raw": "{{apiHost}}/countries/{{countryId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"countries",
 								"{{countryId}}"
 							]
@@ -1030,6 +1227,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -1042,12 +1249,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/countries/{{countryId}}",
+							"raw": "{{apiHost}}/countries/{{countryId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"countries",
 								"{{countryId}}"
 							]
@@ -1073,6 +1279,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -1085,12 +1301,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/countries/123123",
+							"raw": "{{apiHost}}/countries/123123",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"countries",
 								"123123"
 							]
@@ -1116,6 +1331,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -1128,12 +1353,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/countries/7c6033c4-0006-4127-23a3-2221f8278771",
+							"raw": "{{apiHost}}/countries/7c6033c4-0006-4127-23a3-2221f8278771",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"countries",
 								"7c6033c4-0006-4127-23a3-2221f8278771"
 							]
@@ -1160,15 +1384,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/countries/{{countryId}}",
+							"raw": "{{apiHost}}/countries/{{countryId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"countries",
 								"{{countryId}}"
 							]
@@ -1195,15 +1428,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/countries/12312312",
+							"raw": "{{apiHost}}/countries/12312312",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"countries",
 								"12312312"
 							]
@@ -1231,15 +1473,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/countries/7c6033c4-0006-4127-23a3-2221f8278771",
+							"raw": "{{apiHost}}/countries/7c6033c4-0006-4127-23a3-2221f8278771",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"countries",
 								"7c6033c4-0006-4127-23a3-2221f8278771"
 							]
@@ -1284,6 +1535,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -1296,12 +1557,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/brands",
+							"raw": "{{apiHost}}/brands",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"brands"
 							]
 						}
@@ -1340,6 +1600,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -1352,12 +1622,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/brands",
+							"raw": "{{apiHost}}/brands",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"brands"
 							]
 						}
@@ -1384,15 +1653,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/brands",
+							"raw": "{{apiHost}}/brands",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"brands"
 							]
 						}
@@ -1417,15 +1695,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/brands/{{brandId}}",
+							"raw": "{{apiHost}}/brands/{{brandId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"brands",
 								"{{brandId}}"
 							]
@@ -1451,15 +1738,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/brands/7c6033c4-0006-4127-23a3-2221f8278771",
+							"raw": "{{apiHost}}/brands/7c6033c4-0006-4127-23a3-2221f8278771",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"brands",
 								"7c6033c4-0006-4127-23a3-2221f8278771"
 							]
@@ -1498,6 +1794,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -1510,12 +1816,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/brands/{{brandId}}",
+							"raw": "{{apiHost}}/brands/{{brandId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"brands",
 								"{{brandId}}"
 							]
@@ -1554,6 +1859,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -1566,12 +1881,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/brands/{{brandId}}",
+							"raw": "{{apiHost}}/brands/{{brandId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"brands",
 								"{{brandId}}"
 							]
@@ -1597,6 +1911,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -1609,12 +1933,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiHost}}/auto/brands/7c6033c4-0006-4127-23a3-2221f8278771",
+							"raw": "{{apiHost}}/brands/7c6033c4-0006-4127-23a3-2221f8278771",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"brands",
 								"7c6033c4-0006-4127-23a3-2221f8278771"
 							]
@@ -1641,15 +1964,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/brands/{{brandId}}",
+							"raw": "{{apiHost}}/brands/{{brandId}}",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"brands",
 								"{{brandId}}"
 							]
@@ -1676,15 +2008,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/brands/12312s",
+							"raw": "{{apiHost}}/brands/12312s",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"brands",
 								"12312s"
 							]
@@ -1712,15 +2053,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{apiHost}}/auto/brands/7c6033c4-0006-4127-23a3-2221f8278771",
+							"raw": "{{apiHost}}/brands/7c6033c4-0006-4127-23a3-2221f8278771",
 							"host": [
 								"{{apiHost}}"
 							],
 							"path": [
-								"auto",
 								"brands",
 								"7c6033c4-0006-4127-23a3-2221f8278771"
 							]
@@ -1756,9 +2106,9 @@
 	],
 	"variable": [
 		{
-			"id": "56bdb935-10fc-477c-ab11-65a2087045a2",
+			"id": "e43142f5-6514-4059-9e74-2cf8135374d9",
 			"key": "apiHost",
-			"value": "http://localhost:8080",
+			"value": "http://localhost:8080/auto-api",
 			"type": "string"
 		}
 	],

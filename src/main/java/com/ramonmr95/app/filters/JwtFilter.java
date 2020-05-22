@@ -12,9 +12,9 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.JWTVerifier;
 
 /**
  * 

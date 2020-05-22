@@ -152,7 +152,7 @@ public class CarResourceRestTest {
 	@Test
 	public void whenDeletingACarWithAValidID_ShouldReturnStatusNoContent() {
 		try {
-			doNothing().when(this.carService).deleteCar(carId.toString());
+			doNothing().when(this.carService).markCarToDelete(carId.toString());
 			Response response = this.carResource.deleteCar(carId.toString());
 			assertEquals(Status.NO_CONTENT.getStatusCode(), response.getStatus());
 		} catch (EntityNotFoundException | InvalidUUIDFormatException e) {
@@ -228,8 +228,8 @@ public class CarResourceRestTest {
 	@Test
 	public void whenDeletingACarWithAnInValidID_ShouldReturnStatusNotFound() throws EntityNotFoundException {
 		try {
-			String id = "e72fd0a4-f7a5-42d4-908e-7bc1dc62f000";
-			doThrow(EntityNotFoundException.class).when(this.carService).deleteCar(id);
+			String id = "e72fd0a4-f7a5-42d4-908e-7bc1dc633333";
+			doThrow(EntityNotFoundException.class).when(this.carService).markCarToDelete(id);
 			Response response = this.carResource.deleteCar(id.toString());
 			assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
 		} catch (InvalidUUIDFormatException e) {
