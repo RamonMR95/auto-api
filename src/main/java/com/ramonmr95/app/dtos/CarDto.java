@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.json.bind.annotation.JsonbDateFormat;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -77,6 +79,7 @@ public class CarDto implements Serializable {
 		this.color = color;
 	}
 
+	@JsonbDateFormat(value = "yyyy-MM-dd'T'HH:mm:ssX")
 	public Date getRegistration() {
 		return registration;
 	}
