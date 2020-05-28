@@ -1,0 +1,2 @@
+activemq/apache-activemq-5.14.5/bin/activemq start &
+java -DDB_SERVER_NAME=$DB_HOST_NAME -DDB_PORT=$DB_PORT -DDB_NAME=$DB_NAME -DDB_USER=$DB_USER -DDB_PASSWORD=$DB_PASSWORD -jar payara-micro-5.201.jar activemq/apache-activemq-5.14.5/activemq-rar-5.14.5.rar auto-api.war
